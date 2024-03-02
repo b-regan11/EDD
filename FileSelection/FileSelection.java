@@ -7,7 +7,7 @@ public class FileSelection {
     public static String selectFile() {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Excel Files", "xlsx", "csv");
+                "Excel Files", "xlsx");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -22,7 +22,7 @@ public class FileSelection {
         // Example of how to use the selectFile method
         String selectedFileName = selectFile();
         if (selectedFileName != null) {
-            System.out.println("You chose to open this file: " + selectedFileName);
+            System.out.println(selectedFileName);
         }
     }
 }
