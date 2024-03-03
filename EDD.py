@@ -2,7 +2,7 @@ import os
 import subprocess
 import pandas as pd
 import datetime
-from BinPacking import BinPacking_Functions
+from BinPacking import BinPacking_UrgencyList
 
 # Compile & Run the Java class (File Selection)
 subprocess.run(['javac', 'FileSelection/FileSelection.java'])
@@ -31,7 +31,7 @@ if result.returncode == 0:
         sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"') # This is only sorting for status, not date
         sorted_data = sorted_data.sort_values(by=['due_date'])
         
-        BinPacking_Functions.UrgencyList(sorted_data)
+        BinPacking_UrgencyList.UrgencyList(sorted_data)
 
         # Tiered Tie Breakers Implementation
 
