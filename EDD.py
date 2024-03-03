@@ -1,8 +1,6 @@
-# TempQueryName
 import os
 import subprocess
 import pandas as pd
-import openpyxl
 
 # Compile & Run the Java class (File Selection)
 subprocess.run(['javac', 'FileSelection/FileSelection.java'])
@@ -25,8 +23,16 @@ if result.returncode == 0:
         prefix = "You chose to open this file: "
         if selected_file_path.startswith(prefix):
             selected_file_path = selected_file_path[len(prefix):]
-        dataframe = pd.read_excel(selected_file_path,"TempQueryName")
-        print(dataframe)
+        
+        # Read Excel file & Sort based on job status
+        raw_data = pd.read_excel(selected_file_path,"TempQueryName")
+        sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"') # This is only sorting for status, not date
+        sorted_data = sorted_data.sort_values(by=['due_date'])
+        print(sorted_data)
+        # print(sorted_data.columns)
+        # Column Headers
+        # Index(['job_num', 'qty', 'production_hrs', 'machine_num', 'due_date', 'Completed', 'po_num', 'so_num', 'po_price', 'Lbs', 'Material',
+        # 'cost_per_pound', 'Colorant'], dtype='object')
 
     else:
         print("No file path returned by the Java program.")
