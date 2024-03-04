@@ -28,4 +28,4 @@ class BinPacking_UrgencyList:
 # class BinPacking_MachineAvailability:
 #    def __init__(self):
 #         # Initialize an empty dictionary to represent machine schedules
-#         self.machine_schedules = {}
+#         self.machine_schedules = {} 
