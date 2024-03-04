@@ -4,12 +4,12 @@ import pandas as pd
 import openpyxl
 import datetime
 from BinPacking import BinPacking_UrgencyList
-
+ 
 # Compile & Run the Java class (File Selection)
-subprocess.run(['javac', 'FileSelection/FileSelection.java'])
+subprocess.run(['javac', 'src/FileSelection/FileSelection.java'])
 
 # Run the Java class and capture the standard output
-result = subprocess.run(['java', 'FileSelection/FileSelection'], stdout=subprocess.PIPE, text=True)
+result = subprocess.run(['java', 'src/FileSelection/FileSelection'], stdout=subprocess.PIPE, text=True)
 
 # Check if the Java program ran successfully
 if result.returncode == 0:

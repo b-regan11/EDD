@@ -1,7 +1,7 @@
-package FileSelection;
+package src.FileSelection;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+ 
 
 public class FileSelection {
     public static String selectFile() {

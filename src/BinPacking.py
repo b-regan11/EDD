@@ -3,7 +3,7 @@ class BinPacking_UrgencyList:
     # Start & End dates for production week
     start_date = '2023-4-24' # datetime.date(2023,4,24)
     end_date = '2023-4-30' # datetime.date(2023,4,30)         #both of these should be user input later on
-
+ 
     # Urgency List for Job Priorities
     UrgencyList = sorted_data[(sorted_data['due_date'] >= start_date) & (sorted_data['due_date'] <= end_date)]
     UL_Attainable = UrgencyList.query('production_hrs <= 25') # 1
