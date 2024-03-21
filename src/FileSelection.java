@@ -1,4 +1,4 @@
-package src.FileSelection;
+package src;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
  
