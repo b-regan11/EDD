@@ -7,13 +7,18 @@ import java.time.Duration;
 
 public class Machines {
     // Create a new instance of the Timeslot class
-    private Slot slotA = new Slot();
     
     // Create a HashMap with Integer keys and Slot objects as values for Machines 2, 5, 6, & 9
-    public Map<Integer, Slot> mach2 = new HashMap<>();
-    public Map<Integer, Slot> mach5 = new HashMap<>();
-    public Map<Integer, Slot> mach6 = new HashMap<>();
-    public Map<Integer, Slot> mach9 = new HashMap<>();
+    public Map<Integer, Slot> mach2Slot = new HashMap<>();
+    public Map<Integer, Slot> mach5Slot = new HashMap<>();
+    public Map<Integer, Slot> mach6Slot = new HashMap<>();
+    public Map<Integer, Slot> mach9Slot = new HashMap<>();
+
+    // Create a HashMap with Integer keys and Frame objects as values for Machines 2, 5, 6, & 9
+    public Map<Integer, Frame> mach2Frames = new HashMap<>();
+    public Map<Integer, Frame> mach5Frames = new HashMap<>();
+    public Map<Integer, Frame> mach6Frames = new HashMap<>();
+    public Map<Integer, Frame> mach9Frames = new HashMap<>();
 
     // Establish values for earlyStartTime & lateStartTime
     static LocalDateTime earlyStartTime = LocalDateTime.of(2024, 3, 22, 6, 0, 0);
@@ -28,56 +33,173 @@ public class Machines {
     static float totalHours = totalMinutes/60;
     static int slotCount = (int)totalHours * 2 + 1;
 
-    // Method to create slots for each machine
+    // Method to create slots & establish frame constraints for each machine
     public void create(LocalDateTime earlyStartTime, LocalDateTime lateEndTime) {
         for (int m = 1; m <= 4; m++) {
+            // Timeslot creation
             for (int i = 0; i <= slotCount - 1; i++) {
-                Slot slotB = new Slot();
-                slotA.setStart(null); // Set default start time
-                slotA.setEnd(null); // Set default end time
-                slotA.setAvailability(false); // Set default availability
-                slotA.setAssignment(null); // Set default assignment
-                slotB.setStart(earlyStartTime.plusMinutes(i * slotDuration.toMinutes()));
-                slotB.setEnd(slotB.getStart().plusMinutes(slotDuration.toMinutes()));
+                Slot slot = new Slot();
+                slot.setStart(earlyStartTime.plusMinutes(i * slotDuration.toMinutes()));
+                slot.setEnd(slot.getStart().plusMinutes(slotDuration.toMinutes()));
+                slot.setAvailability(false); // Set default availability
+                slot.setAssignment(null); // Set default assignment
                 if (m == 1) {
-                    mach2.put(i, slotB);
+                    mach2Slot.put(i, slot);
                 } else if (m == 2) {
-                    mach5.put(i, slotB);
+                    mach5Slot.put(i, slot);
                 } else if (m == 3) {
-                    mach6.put(i, slotB);
+                    mach6Slot.put(i, slot);
                 } else if (m == 4) {
-                    mach9.put(i, slotB);
+                    mach9Slot.put(i, slot);
                 } else {
                     System.out.println("Error: Not a current machine");
                     System.exit(0);
                 }
             }
+
+            // Frame type creation
+            for (int f = 0; f <= 7; f++) {
+                Frame frame = new Frame();
+                // Set Default Tier Values
+                frame.setTierA(false);
+                frame.setTierB(false);
+
+                // Set Frame Types and Tiered Preferences
+                if (f == 0) {
+                    frame.setFrameType("Small");
+                    if (m == 1) {
+                        // Machine 2
+                        frame.setTierA(true);
+                    } else if (m == 2) {
+                        // Machine 5
+                        frame.setTierB(true);
+                    } else if (m == 3) {
+                        // Machine 6
+                        frame.setTierA(true);
+                    }
+                } else if (f == 1) {
+                    frame.setFrameType("Round");
+                    if (m == 1) {
+                        // Machine 2
+                        frame.setTierA(true);
+                    } else if (m == 2) {
+                        // Machine 5
+                        frame.setTierB(true);
+                    } else if (m == 3) {
+                        // Machine 6
+                        frame.setTierA(true);
+                    }
+                } else if (f == 2) {
+                    frame.setFrameType("Rectangle");
+                    if (m == 1) {
+                        // Machine 2
+                        frame.setTierA(true);
+                    } else if (m == 2) {
+                        // Machine 5
+                        frame.setTierB(true);
+                    } else if (m == 3) {
+                        // Machine 6
+                        frame.setTierA(true);
+                    }
+                } else if (f == 3) {
+                    frame.setFrameType("Short Large-T");
+                    if (m == 2) {
+                        // Machine 5
+                        frame.setTierA(true);
+                    }
+                } else if (f == 4) {
+                    frame.setFrameType("Large-T");
+                    if (m == 2) {
+                        // Machine 5
+                        frame.setTierA(true);
+                    } else if (m == 3) {
+                        // Machine 6
+                        frame.setTierA(true);
+                    } else if (m == 4) {
+                        // Machine 9
+                        frame.setTierB(true);
+                    }
+                } else if (f == 5) {
+                    frame.setFrameType("Small Self Contain");
+                    if (m == 2) {
+                        // Machine 5
+                        frame.setTierA(true);
+                    } else if (m == 3) {
+                        // Machine 6
+                        frame.setTierA(true);
+                    }
+                } else if (f == 6) {
+                    frame.setFrameType("Self Contain");
+                    if (m == 4) {
+                        // Machine 9
+                        frame.setTierA(true);
+                    }
+                } else if (f == 7) {
+                    frame.setFrameType("XL-T");
+                    if (m == 2) {
+                        // Machine 5
+                        frame.setTierB(true);
+                    } else if (m == 4) {
+                        // Machine 9
+                        frame.setTierA(true);
+                    }
+                } else {
+                    System.out.println("Error: Not a current frame");
+                    System.exit(0);
+                }
+                // Adding Frames to Hashmaps
+                if (m == 1) {
+                    mach2Frames.put(f, frame);
+                } else if (m == 2) {
+                    mach5Frames.put(f, frame);
+                } else if (m == 3) {
+                    mach6Frames.put(f, frame);
+                } else if (m == 4) {
+                    mach9Frames.put(f, frame);
+                } else {
+                    System.out.println("Error: Not a current machine");
+                    System.exit(0);
+                }
+            }
+
         }
     }
 
-    // Getter and setter methods for availability and assignment properties of each machine
-    public boolean getAvailability(int machineNumber, int slotNumber) {
-        return getMachine(machineNumber).get(slotNumber).getAvailability();
+    // Getter methods for start, end, availability and assignment properties of each machine
+    public LocalDateTime getStartTime(int machineNumber, int slotNumber) {
+        return getMachine(machineNumber).get(slotNumber).getStart();
     }
 
-    public void setAvailability(int machineNumber, int slotNumber, boolean availability) {
-        getMachine(machineNumber).get(slotNumber).setAvailability(availability);
+    public LocalDateTime getEndTime(int machineNumber, int slotNumber) {
+        return getMachine(machineNumber).get(slotNumber).getEnd();
+    }
+
+    public boolean getAvailability(int machineNumber, int slotNumber) {
+        return getMachine(machineNumber).get(slotNumber).getAvailability();
     }
 
     public String getAssignment(int machineNumber, int slotNumber) {
         return getMachine(machineNumber).get(slotNumber).getAssignment();
     }
 
+    // setter methods for availability and assignment properties of each machine
+    public void setAvailability(int machineNumber, int slotNumber, boolean availability) {
+        getMachine(machineNumber).get(slotNumber).setAvailability(availability);
+    }
+
     public void setAssignment(int machineNumber, int slotNumber, String assignment) {
         getMachine(machineNumber).get(slotNumber).setAssignment(assignment);
     }
 
-    public LocalDateTime getStartTime(int machineNumber, int slotNumber) {
-        return getMachine(machineNumber).get(slotNumber).getStart();
+    // Getter methods for frame type, tierA and tierB compatibility properties of each machine
+    public String getFrameType(int machineNumber, int frameNumber) {
+        return getFrameList(machineNumber).get(frameNumber).getFrameType();
     }
-    
-    public LocalDateTime getEndTime(int machineNumber, int slotNumber) {
-        return getMachine(machineNumber).get(slotNumber).getEnd();
+    public boolean getTierA(int machineNumber, int frameNumber) {
+        return getFrameList(machineNumber).get(frameNumber).getTierA();
+    }
+    public boolean getTierB(int machineNumber, int frameNumber) {
+        return getFrameList(machineNumber).get(frameNumber).getTierB();
     }
     
 
@@ -85,15 +207,31 @@ public class Machines {
     private Map<Integer, Slot> getMachine(int machineNumber) {
         switch (machineNumber) {
             case 1:
-                return mach2;
+                return mach2Slot;
             case 2:
-                return mach5;
+                return mach5Slot;
             case 3:
-                return mach6;
+                return mach6Slot;
             case 4:
-                return mach9;
+                return mach9Slot;
             default:
                 throw new IllegalArgumentException("Invalid machine number");
+        }
+    }
+
+    // Helper method to get the frame hashmap based on the machine number
+    private Map<Integer, Frame> getFrameList(int machineNumber) {
+        switch (machineNumber) {
+            case 1:
+                return mach2Frames;
+            case 2:
+                return mach5Frames;
+            case 3:
+                return mach6Frames;
+            case 4:
+                return mach9Frames;
+            default:
+                throw new IllegalArgumentException("Invalid frane number");
         }
     }
 }
