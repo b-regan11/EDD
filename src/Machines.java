@@ -61,7 +61,8 @@ public class Machines {
             for (int f = 0; f <= 7; f++) {
                 Frame frame = new Frame();
                 // Set Default Tier Values
-                frame.setTierA(false);
+                frame.setTierA1(false);
+                frame.setTierA2(false);
                 frame.setTierB(false);
 
                 // Set Frame Types and Tiered Preferences
@@ -69,52 +70,52 @@ public class Machines {
                     frame.setFrameType("Small");
                     if (m == 1) {
                         // Machine 2
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     } else if (m == 2) {
                         // Machine 5
                         frame.setTierB(true);
                     } else if (m == 3) {
                         // Machine 6
-                        frame.setTierA(true);
+                        frame.setTierA2(true);
                     }
                 } else if (f == 1) {
                     frame.setFrameType("Round");
                     if (m == 1) {
                         // Machine 2
-                        frame.setTierA(true);
+                        frame.setTierA2(true);
                     } else if (m == 2) {
                         // Machine 5
                         frame.setTierB(true);
                     } else if (m == 3) {
                         // Machine 6
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     }
                 } else if (f == 2) {
                     frame.setFrameType("Rectangle");
                     if (m == 1) {
                         // Machine 2
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     } else if (m == 2) {
                         // Machine 5
                         frame.setTierB(true);
                     } else if (m == 3) {
                         // Machine 6
-                        frame.setTierA(true);
+                        frame.setTierA2(true);
                     }
                 } else if (f == 3) {
                     frame.setFrameType("Short Large-T");
                     if (m == 2) {
                         // Machine 5
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     }
                 } else if (f == 4) {
                     frame.setFrameType("Large-T");
                     if (m == 2) {
                         // Machine 5
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     } else if (m == 3) {
                         // Machine 6
-                        frame.setTierA(true);
+                        frame.setTierA2(true);
                     } else if (m == 4) {
                         // Machine 9
                         frame.setTierB(true);
@@ -123,16 +124,16 @@ public class Machines {
                     frame.setFrameType("Small Self Contain");
                     if (m == 2) {
                         // Machine 5
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     } else if (m == 3) {
                         // Machine 6
-                        frame.setTierA(true);
+                        frame.setTierA2(true);
                     }
                 } else if (f == 6) {
                     frame.setFrameType("Self Contain");
                     if (m == 4) {
                         // Machine 9
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     }
                 } else if (f == 7) {
                     frame.setFrameType("XL-T");
@@ -141,7 +142,7 @@ public class Machines {
                         frame.setTierB(true);
                     } else if (m == 4) {
                         // Machine 9
-                        frame.setTierA(true);
+                        frame.setTierA1(true);
                     }
                 } else {
                     System.out.println("Error: Not a current frame");
@@ -191,12 +192,15 @@ public class Machines {
         getMachine(machineNumber).get(slotNumber).setAssignment(assignment);
     }
 
-    // Getter methods for frame type, tierA and tierB compatibility properties of each machine
+    // Getter methods for frame type, tierA1, tierA2 and tierB compatibility properties of each machine
     public String getFrameType(int machineNumber, int frameNumber) {
         return getFrameList(machineNumber).get(frameNumber).getFrameType();
     }
-    public boolean getTierA(int machineNumber, int frameNumber) {
-        return getFrameList(machineNumber).get(frameNumber).getTierA();
+    public boolean getTierA1(int machineNumber, int frameNumber) {
+        return getFrameList(machineNumber).get(frameNumber).getTierA1();
+    }
+    public boolean getTierA2(int machineNumber, int frameNumber) {
+        return getFrameList(machineNumber).get(frameNumber).getTierA2();
     }
     public boolean getTierB(int machineNumber, int frameNumber) {
         return getFrameList(machineNumber).get(frameNumber).getTierB();
@@ -235,74 +239,3 @@ public class Machines {
         }
     }
 }
-
-// Old Code
-
-// package src;
-// import java.util.HashMap;
-// import java.util.Map;
-// import java.time.LocalDateTime;
-// import java.time.Duration;
-
-// public class Machines {
-//     // Create a new instance of the Timeslot class
-//     private Slot slotA = new Slot();
-    
-//     // Create a HashMap with Integer keys and Slot objects as values for Machines 2, 5, 6, & 9
-//     public Map<Integer, Slot> mach2 = new HashMap<>();
-//     public Map<Integer, Slot> mach5 = new HashMap<>();
-//     public Map<Integer, Slot> mach6 = new HashMap<>();
-//     public Map<Integer, Slot> mach9 = new HashMap<>();
-
-//     // Establish values for earlyStartTime & lateStartTime
-//     static LocalDateTime earlyStartTime = LocalDateTime.of(2024, 3, 22, 6, 0, 0);
-//     static LocalDateTime lateEndTime = LocalDateTime.of(2024, 3, 22, 18, 30, 0);
-
-//     // Establish Timeslot duration (30 minutes)
-//     static Duration slotDuration = Duration.ofMinutes(30);
-
-//     // Calculation of Total Hours for Slot Count
-//     static Duration scheduleDuration = Duration.between(earlyStartTime, lateEndTime);
-//     static float totalMinutes = scheduleDuration.toMinutes();
-//     static float totalHours = totalMinutes/60;
-//     static int slotCount = (int)totalHours * 2 + 1;
-
-
-//     public static void main(String[] args) {
-//         Machines machine = new Machines(); // Creates instance of Machine
-
-//         for (int m = 1; m <= 4; m++) {
-//             System.out.println("\n" + "Machine: " + m + "\n");
-//             for (int i = 0; i <= slotCount - 1; i++) {
-//                 // Creates a new slot object
-//                 Slot slotB = new Slot();
-
-//                 machine.slotA.setStart(null); // Set default start time
-//                 machine.slotA.setEnd(null); // Set default end time
-//                 machine.slotA.setAvailability(false); // Set default availability
-//                 machine.slotA.setAssignment(null); // Set default assignment
-
-//                 slotB.setStart(earlyStartTime.plusMinutes(i * slotDuration.toMinutes()));
-//                 slotB.setEnd(slotB.getStart().plusMinutes(slotDuration.toMinutes()));
-//                 if (m == 1) {
-//                     machine.mach2.put(i, slotB);
-//                 } else if (m == 2) {
-//                     machine.mach5.put(i, slotB);
-//                 } else if (m == 3) {
-//                     machine.mach6.put(i, slotB);
-//                 } else if (m == 4) {
-//                     machine.mach9.put(i, slotB);
-//                 } else {
-//                     System.out.println("Error: Not a current machine");
-//                     System.exit(0);
-//                 }
-//                 System.out.println("Start Time: " + slotB.getStart());
-//                 System.out.println("End Time: " + slotB.getEnd());
-//                 System.out.println("Availability: " + slotB.getAvailability());
-//                 System.out.println("Assignment: " + slotB.getAssignment());
-//             }
-//         }
-//     }
-// }
-
-

@@ -2,42 +2,33 @@ from datetime import datetime
 
 class Slot:
     def __init__(self):
-        self.slot_start = None
-        self.slot_end = None
-        self.slot_availability = False
-        self.slot_assignment = None
+        self.slotStart = None
+        self.slotEnd = None
+        self.slotAvailability = False  # This shows whether it's filled or not, False meaning it can be assigned a job.
+        self.slotAssignment = None
 
     # Getters for Start Time, End Time, Availability, and Assignment
     def get_start(self):
-        return self.slot_start
+        return self.slotStart
 
     def get_end(self):
-        return self.slot_end
+        return self.slotEnd
 
     def get_availability(self):
-        return self.slot_availability
+        return self.slotAvailability
 
     def get_assignment(self):
-        return self.slot_assignment
+        return self.slotAssignment
 
     # Setters for Start Time, End Time, Availability, and Assignment
     def set_start(self, start):
-        self.slot_start = start
+        self.slotStart = start
 
     def set_end(self, end):
-        self.slot_end = end
+        self.slotEnd = end
 
     def set_availability(self, availability):
-        self.slot_availability = availability
+        self.slotAvailability = availability
 
     def set_assignment(self, assignment):
-        self.slot_assignment = assignment
-
-
-class Timeslot:
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def main():
-        pass
+        self.slotAssignment = assignment

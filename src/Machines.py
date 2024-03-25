@@ -1,17 +1,20 @@
 from datetime import datetime, timedelta
+from Timeslot import Slot
+from Frames import Frame
 
 class Machines:
     def __init__(self):
-        # Create a new instance of the Timeslot class
-        self.slot_a = Slot()
+        # Create dictionaries with Integer keys and Slot/Frame objects as values for Machines 2, 5, 6, & 9
+        self.mach2_slot = {}
+        self.mach5_slot = {}
+        self.mach6_slot = {}
+        self.mach9_slot = {}
+        self.mach2_frames = {}
+        self.mach5_frames = {}
+        self.mach6_frames = {}
+        self.mach9_frames = {}
 
-        # Create a dictionary with integer keys and Slot objects as values for Machines 2, 5, 6, & 9
-        self.mach2 = {}
-        self.mach5 = {}
-        self.mach6 = {}
-        self.mach9 = {}
-
-        # Establish values for early_start_time & late_end_time
+        # Establish values for earlyStartTime & lateStartTime
         self.early_start_time = datetime(2024, 3, 22, 6, 0, 0)
         self.late_end_time = datetime(2024, 3, 22, 18, 30, 0)
 
@@ -19,90 +22,165 @@ class Machines:
         self.slot_duration = timedelta(minutes=30)
 
         # Calculation of Total Hours for Slot Count
-        self.schedule_duration = self.late_end_time - self.early_start_time
-        self.total_minutes = self.schedule_duration.total_seconds() / 60
-        self.total_hours = self.total_minutes / 60
-        self.slot_count = int(self.total_hours * 2) + 1
+        schedule_duration = self.late_end_time - self.early_start_time
+        total_minutes = schedule_duration.total_seconds() / 60
+        self.slot_count = int(total_minutes / 30) + 1
 
-    # Method to create slots for each machine
+    # Method to create slots & establish frame constraints for each machine
     def create(self, early_start_time, late_end_time):
         for m in range(1, 5):
+            # Timeslot creation
             for i in range(self.slot_count):
-                slot_b = Slot()
-                self.slot_a.set_start(None)  # Set default start time
-                self.slot_a.set_end(None)  # Set default end time
-                self.slot_a.set_availability(False)  # Set default availability
-                self.slot_a.set_assignment(None)  # Set default assignment
-                start_time = early_start_time + timedelta(minutes=i * self.slot_duration.total_seconds() / 60)
-                end_time = start_time + self.slot_duration
-                slot_b.set_start(start_time)
-                slot_b.set_end(end_time)
+                slot = Slot()
+                slot.set_start(early_start_time + i * self.slot_duration)
+                slot.set_end(slot.get_start() + self.slot_duration)
+                slot.set_availability(False)  # Set default availability
+                slot.set_assignment(None)  # Set default assignment
                 if m == 1:
-                    self.mach2[i] = slot_b
+                    self.mach2_slot[i] = slot
                 elif m == 2:
-                    self.mach5[i] = slot_b
+                    self.mach5_slot[i] = slot
                 elif m == 3:
-                    self.mach6[i] = slot_b
+                    self.mach6_slot[i] = slot
                 elif m == 4:
-                    self.mach9[i] = slot_b
+                    self.mach9_slot[i] = slot
                 else:
                     print("Error: Not a current machine")
                     exit(0)
 
-    # Getter and setter methods for availability and assignment properties of each machine
-    def get_availability(self, machine_number, slot_number):
-        return self.get_machine(machine_number)[slot_number].get_availability()
+            # Frame type creation
+            for f in range(8):
+                frame = Frame()
+                # Set Default Tier Values
+                frame.set_tier_a1(False)
+                frame.set_tier_a2(False)
+                frame.set_tier_b(False)
 
-    def set_availability(self, machine_number, slot_number, availability):
-        self.get_machine(machine_number)[slot_number].set_availability(availability)
+                # Set Frame Types and Tiered Preferences
+                if f == 0:
+                    frame.set_frame_type("Small")
+                    if m == 1:
+                        frame.set_tier_a1(True)  # Machine 2
+                    elif m == 2:
+                        frame.set_tier_b(True)  # Machine 5
+                    elif m == 3:
+                        frame.set_tier_a2(True)  # Machine 6
+                elif f == 1:
+                    frame.set_frame_type("Round")
+                    if m == 1:
+                        frame.set_tier_a2(True)  # Machine 2
+                    elif m == 2:
+                        frame.set_tier_b(True)  # Machine 5
+                    elif m == 3:
+                        frame.set_tier_a1(True)  # Machine 6
+                elif f == 2:
+                    frame.set_frame_type("Rectangle")
+                    if m == 1:
+                        frame.set_tier_a1(True)  # Machine 2
+                    elif m == 2:
+                        frame.set_tier_b(True)  # Machine 5
+                    elif m == 3:
+                        frame.set_tier_a2(True)  # Machine 6
+                elif f == 3:
+                    frame.set_frame_type("Short Large-T")
+                    if m == 2:
+                        frame.set_tier_a1(True)  # Machine 5
+                elif f == 4:
+                    frame.set_frame_type("Large-T")
+                    if m == 2:
+                        frame.set_tier_a1(True)  # Machine 5
+                    elif m == 3:
+                        frame.set_tier_a2(True)  # Machine 6
+                    elif m == 4:
+                        frame.set_tier_b(True)  # Machine 9
+                elif f == 5:
+                    frame.set_frame_type("Small Self Contain")
+                    if m == 2:
+                        frame.set_tier_a1(True)  # Machine 5
+                    elif m == 3:
+                        frame.set_tier_a2(True)  # Machine 6
+                elif f == 6:
+                    frame.set_frame_type("Self Contain")
+                    if m == 4:
+                        frame.set_tier_a1(True)  # Machine 9
+                elif f == 7:
+                    frame.set_frame_type("XL-T")
+                    if m == 2:
+                        frame.set_tier_b(True)  # Machine 5
+                    elif m == 4:
+                        frame.set_tier_a1(True)  # Machine 9
+                else:
+                    print("Error: Not a current frame")
+                    exit(0)
 
-    def get_assignment(self, machine_number, slot_number):
-        return self.get_machine(machine_number)[slot_number].get_assignment()
+                # Adding Frames to Dictionaries
+                if m == 1:
+                    self.mach2_frames[f] = frame
+                elif m == 2:
+                    self.mach5_frames[f] = frame
+                elif m == 3:
+                    self.mach6_frames[f] = frame
+                elif m == 4:
+                    self.mach9_frames[f] = frame
+                else:
+                    print("Error: Not a current machine")
+                    exit(0)
 
-    def set_assignment(self, machine_number, slot_number, assignment):
-        self.get_machine(machine_number)[slot_number].set_assignment(assignment)
-
+    # Getter methods for start, end, availability and assignment properties of each machine
     def get_start_time(self, machine_number, slot_number):
         return self.get_machine(machine_number)[slot_number].get_start()
 
     def get_end_time(self, machine_number, slot_number):
         return self.get_machine(machine_number)[slot_number].get_end()
 
+    def get_availability(self, machine_number, slot_number):
+        return self.get_machine(machine_number)[slot_number].get_availability()
+
+    def get_assignment(self, machine_number, slot_number):
+        return self.get_machine(machine_number)[slot_number].get_assignment()
+
+    # setter methods for availability and assignment properties of each machine
+    def set_availability(self, machine_number, slot_number, availability):
+        self.get_machine(machine_number)[slot_number].set_availability(availability)
+
+    def set_assignment(self, machine_number, slot_number, assignment):
+        self.get_machine(machine_number)[slot_number].set_assignment(assignment)
+
+    # Getter methods for frame type, tier_a1, tier_a2 and tier_b compatibility properties of each machine
+    def get_frame_type(self, machine_number, frame_number):
+        return self.get_frame_list(machine_number)[frame_number].get_frame_type()
+
+    def get_tier_a1(self, machine_number, frame_number):
+        return self.get_frame_list(machine_number)[frame_number].get_tier_a1()
+
+    def get_tier_a2(self, machine_number, frame_number):
+        return self.get_frame_list(machine_number)[frame_number].get_tier_a2()
+
+    def get_tier_b(self, machine_number, frame_number):
+        return self.get_frame_list(machine_number)[frame_number].get_tier_b()
+
     # Helper method to get the machine based on the machine number
     def get_machine(self, machine_number):
-        machines = {1: self.mach2, 2: self.mach5, 3: self.mach6, 4: self.mach9}
-        return machines.get(machine_number, None)
+        if machine_number == 1:
+            return self.mach2_slot
+        elif machine_number == 2:
+            return self.mach5_slot
+        elif machine_number == 3:
+            return self.mach6_slot
+        elif machine_number == 4:
+            return self.mach9_slot
+        else:
+            raise ValueError("Invalid machine number")
 
-
-class Slot:
-    def __init__(self):
-        self.slot_start = None
-        self.slot_end = None
-        self.slot_availability = False
-        self.slot_assignment = None
-
-    # Getters for Start Time, End Time, Availability, and Assignment
-    def get_start(self):
-        return self.slot_start
-
-    def get_end(self):
-        return self.slot_end
-
-    def get_availability(self):
-        return self.slot_availability
-
-    def get_assignment(self):
-        return self.slot_assignment
-
-    # Setters for Start Time, End Time, Availability, and Assignment
-    def set_start(self, start):
-        self.slot_start = start
-
-    def set_end(self, end):
-        self.slot_end = end
-
-    def set_availability(self, availability):
-        self.slot_availability = availability
-
-    def set_assignment(self, assignment):
-        self.slot_assignment = assignment
+    # Helper method to get the frame hashmap based on the machine number
+    def get_frame_list(self, machine_number):
+        if machine_number == 1:
+            return self.mach2_frames
+        elif machine_number == 2:
+            return self.mach5_frames
+        elif machine_number == 3:
+            return self.mach6_frames
+        elif machine_number == 4:
+            return self.mach9_frames
+        else:
+            raise ValueError("Invalid frame number")
