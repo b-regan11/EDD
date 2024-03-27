@@ -1,40 +1,38 @@
 import os
-import subprocess
 import pandas as pd
-import openpyxl
-import datetime
-from BinPacking import BinPacking_UrgencyList
- 
-# Compile & Run the Java class (File Selection)
-subprocess.run(['javac', 'src/FileSelection.java'])
+from FileSelection import FileSelection
+from BinPacking import BinPacking
+from JobAdd import JobAdd
 
-# Run the Java class and capture the standard output
-result = subprocess.run(['java', 'src/FileSelection.java'], stdout=subprocess.PIPE, text=True)
+# Call File Selection
+def run_file_selection():
+    file_selector = FileSelection()
+    selected_file_path = file_selector.main()
 
-# Check if the Java program ran successfully
-if result.returncode == 0:
-    # Access the standard output of the Java program
-    java_output = result.stdout
+    if selected_file_path:
+        print("Python program selected file path:", selected_file_path)
 
-    # Process or extract the file path from the Java output
-    lines = java_output.splitlines()
-    if lines:
-        selected_file_path = lines[-1].strip()  # Assuming the file path is the last line of output
-        print("Java program selected file path:", selected_file_path)
-
-        # Extract only the file path from the message
-        prefix = "You chose to open this file: "
-        if selected_file_path.startswith(prefix):
-            selected_file_path = selected_file_path[len(prefix):]
-        
         # Read Excel file & Sort based on job status
-        raw_data = pd.read_excel(selected_file_path,"TempQueryName")
-        sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"') # This is only sorting for status, not date
+        raw_data = pd.read_excel(selected_file_path, "TempQueryName")
+        sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"')
         sorted_data = sorted_data.sort_values(by=['due_date'])
-        
-        BinPacking_UrgencyList.UrgencyList(sorted_data)
 
-        # Tiered Tie Breakers Implementation
+        # Calls Bin Packing
+        BinPacking.SortUrgencyList(sorted_data)
+
+        # Calls Job Add: Sorting into Urgency Lists
+        # JobAdd.SortUrgencyList(sorted_data)
+
+        # Call the SortUrgencyList function and store the returned variables
+        start_date, end_date, UL_Attainable, UL_Unattainable, UL_Overdue_Attainable, UL_Overdue_Unattainable, OtherList = JobAdd.SortUrgencyList(sorted_data)
+
+        # Call the JobAssignment function with the returned variables
+        JobAdd.JobAssignment(start_date, end_date, UL_Attainable, UL_Unattainable, UL_Overdue_Attainable, UL_Overdue_Unattainable, OtherList)
+
+
 
     else:
-        print("No file path returned by the Java program.")
+        print("No file path returned by the Python program.")
+
+if __name__ == "__main__":
+    run_file_selection()

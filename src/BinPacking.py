@@ -1,5 +1,5 @@
-class BinPacking_UrgencyList:
-  def UrgencyList(sorted_data):
+class BinPacking:
+  def SortUrgencyList(sorted_data):
     # Start & End dates for production week
     start_date = '2023-4-24' # datetime.date(2023,4,24)
     end_date = '2023-4-30' # datetime.date(2023,4,30)         #both of these should be user input later on
