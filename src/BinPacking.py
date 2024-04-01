@@ -23,7 +23,15 @@ class BinPacking:
     print(UL_Unattainable)
     print(UL_Overdue_Unattainable)
     print(OtherList)
-    # For all rows in UL_Attainable, check Frame
+    
+    # Print the data type for each of these lists:
+    print(type(UL_Attainable))
+    print(type(UL_Overdue_Attainable))
+    print(type(UL_Unattainable))
+    print(type(UL_Overdue_Unattainable))
+    print(type(OtherList))
+    
+
 
 # class BinPacking_MachineAvailability:
 #    def __init__(self):

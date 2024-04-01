@@ -19,6 +19,7 @@ class Job:
         self.Colorant_Name = None
         
         self.Overall_Color = None
+        self.Job_Availability = False # This shows whether it's assigned to a timeslot, False meaning it can be assigned to a timeslot.
         self.Machine_Assignment = None
         self.Start = None
         self.End = None
@@ -72,6 +73,9 @@ class Job:
     def get_Overall_Color(self):
         return self.Overall_Color
 
+    def get_Job_Availability(self):
+        return self.Job_Availability
+    
     def get_Machine_Assignment(self):
         return self.Machine_Assignment
     
@@ -130,6 +134,9 @@ class Job:
     def set_Overall_Color(self, overall_color):
         self.Overall_Color = overall_color
 
+    def set_Job_Availability(self, job_availability):
+        self.Job_Availability = job_availability
+    
     def set_Machine_Assignment(self, machine_assignment):
         self.Machine_Assignment = machine_assignment
 
