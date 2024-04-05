@@ -27,26 +27,57 @@ class Machines:
         self.slot_count = int(total_minutes / 30) + 1
 
     # Method to create slots & establish frame constraints for each machine
-    def create(self, early_start_time, late_end_time):
+    def create(self, mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times):
         for m in range(1, 5):
-            # Timeslot creation
-            for i in range(self.slot_count):
-                slot = Slot()
-                slot.set_start(early_start_time + i * self.slot_duration)
-                slot.set_end(slot.get_start() + self.slot_duration)
-                slot.set_availability(False)  # Set default availability
-                slot.set_assignment(None)  # Set default assignment
-                if m == 1:
-                    self.mach2_slot[i] = slot
-                elif m == 2:
-                    self.mach5_slot[i] = slot
-                elif m == 3:
-                    self.mach6_slot[i] = slot
-                elif m == 4:
-                    self.mach9_slot[i] = slot
-                else:
+            if m == 1:
+                day_times = mach2_day_times
+            elif m == 2:
+                day_times = mach5_day_times
+            elif m == 3:
+                day_times = mach6_day_times
+            elif m == 4:
+                day_times = mach9_day_times
+            else:
                     print("Error: Not a current machine")
                     exit(0)
+            
+            # for d, (start, end) in enumerate(day_times):
+            #     slot_count = self.calculate_slot_count(start, end)
+            prev_loop = 0
+            for d in range(len(day_times)):
+                start, end = day_times[d]
+                print("d -> ", d)
+                slot_count = Machines.calculate_slot_count(self, start, end)
+
+                # Timeslot creation
+                for i in range(slot_count - 1):
+                    slot = Slot()
+                    slot.set_start(start + i * self.slot_duration)
+                    slot.set_end(slot.get_start() + self.slot_duration)
+                    slot.set_availability(False)  # Set default availability
+                    slot.set_assignment(None)  # Set default assignment
+                    #d * (slot_count - 1) + i
+                    
+                    curr_loop = i
+                    if d == 0:
+                        index = curr_loop
+                        prev_loop = curr_loop + 1
+                    else:
+                        index = prev_loop
+                        prev_loop = prev_loop + 1
+                    
+                    if m == 1:
+                        self.mach2_slot[index] = slot
+                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                    elif m == 2:
+                        self.mach5_slot[index] = slot
+                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                    elif m == 3:
+                        self.mach6_slot[index] = slot
+                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                    elif m == 4:
+                        self.mach9_slot[index] = slot
+                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
 
             # Frame type creation
             for f in range(8):
@@ -184,3 +215,9 @@ class Machines:
             return self.mach9_frames
         else:
             raise ValueError("Invalid frame number")
+
+    # Method to calculate how many timeslots in a time period
+    def calculate_slot_count(self, start, end):
+        schedule_duration = end - start
+        total_minutes = schedule_duration.total_seconds() / 60
+        return int(total_minutes / 30) + 1

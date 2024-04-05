@@ -13,10 +13,10 @@ class Job:
         self.Frame = None
         self.Lbs = None
         self.Material_ID = None
-        self.Material_Name = None
+        self.Material_Name = None # Color Name
         self.Cost_Per_Pound = None
         self.Colorant_ID = None
-        self.Colorant_Name = None
+        self.Colorant_Name = None # Color Name
         
         self.Overall_Color = None
         self.Job_Availability = False # This shows whether it's assigned to a timeslot, False meaning it can be assigned to a timeslot.

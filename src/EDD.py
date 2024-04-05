@@ -3,7 +3,28 @@ import os
 import pandas as pd
 from FileSelection import FileSelection
 from BinPacking import BinPacking
-from UrgencyList import UrgencyList
+from Machines import Machines
+
+mach2_day_times = [
+    (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
+    (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
+    (datetime(2024, 3, 24, 14, 0, 0), datetime(2024, 3, 24, 18, 30, 0))
+]
+mach5_day_times = [
+    (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
+    (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
+    (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+]
+mach6_day_times = [
+    (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
+    (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
+    (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+]
+mach9_day_times = [
+    (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
+    (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
+    (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+]
 
 # Call File Selection
 def run_file_selection():
@@ -18,42 +39,21 @@ def run_file_selection():
         sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"')
         sorted_data = sorted_data.sort_values(by=['due_date'])
         
-        # Start & End dates for production week
-        start_date = datetime(2023, 4, 24, 6, 0, 0)
-        end_date = datetime(2023, 4, 30, 18, 30, 0)
+        # # Start & End dates for production week
+        # start_date = datetime(2023, 4, 24, 6, 0, 0)
+        # end_date = datetime(2023, 4, 30, 18, 30, 0)
 
-        print("Start Date:", start_date)
-        print("End Date:", end_date)
+        # print("Start Date:", start_date)
+        # print("End Date:", end_date)
 
-        # Create an instance of UrgencyList
-        urgency_list = UrgencyList()
+        # BinPacking.main(start_date, end_date, sorted_data)
 
-        # Call the create method
-        urgency_list.create(start_date, end_date, sorted_data)
-
-        # Access and print jobs in each urgency list
-        print("Attainable Jobs:")
-        for job in urgency_list.UL_Attainable.values():
-            print("Job Num:", job.get_Job_Num())
-
-        print("\nOverdue Attainable Jobs:")
-        for job in urgency_list.UL_Overdue_Attainable.values():
-            print("Job Num:", job.get_Job_Num())
-
-        print("\nUnattainable Jobs:")
-        for job in urgency_list.UL_Unattainable.values():
-            print("Job Num:", job.get_Job_Num())
-
-        print("\nOverdue Unattainable Jobs:")
-        for job in urgency_list.UL_Overdue_Unattainable.values():
-            print("Job Num:", job.get_Job_Num())
-
-        print("\nOther Jobs:")
-        for job in urgency_list.UL_Other.values():
-            print("Job Num:", job.get_Job_Num())
+        machines = Machines()
+        machines.create(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times)
         
     else:
         print("No file path returned by the Python program.")
 
 if __name__ == "__main__":
     run_file_selection()
+    # This is where everything should be called in the final product
