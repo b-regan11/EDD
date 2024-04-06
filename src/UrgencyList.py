@@ -520,6 +520,106 @@ class UrgencyList:
                 return self.UL_Other[job_index].get_End()
         return None # Return None if the job is not found
     
+    # Setter methods
+    def set_job_start(self, list_num, job_index, start_time):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_Start(start_time)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_Start(start_time)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_Start(start_time)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_Start(start_time)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_Start(start_time)
+
+    def set_job_end(self, list_num, job_index, end_time):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_End(end_time)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_End(end_time)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_End(end_time)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_End(end_time)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_End(end_time)
+
+    def set_job_machine_assignment(self, list_num, job_index, machine_assignment):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_Machine_Assignment(machine_assignment)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_Machine_Assignment(machine_assignment)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_Machine_Assignment(machine_assignment)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_Machine_Assignment(machine_assignment)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_Machine_Assignment(machine_assignment)
+
+    def set_job_availability(self, list_num, job_index, availability):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_Job_Availability(availability)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_Job_Availability(availability)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_Job_Availability(availability)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_Job_Availability(availability)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_Job_Availability(availability)
+
+    def set_job_overall_color(self, list_num, job_index, overall_color):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_Overall_Color(overall_color)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_Overall_Color(overall_color)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_Overall_Color(overall_color)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_Overall_Color(overall_color)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_Overall_Color(overall_color)
+    
+    # getter methd for total job count in an urgency list
+    def get_job_count(self, list_num):
+        if list_num == 0:
+            return max(self.UL_Attainable.keys())
+        elif list_num == 1:
+            return max(self.UL_Overdue_Attainable.keys())
+        elif list_num == 2:
+            return max(self.UL_Unattainable.keys())
+        elif list_num == 3:
+            return max(self.UL_Overdue_Unattainable.keys())
+        elif list_num == 4:
+            return max(self.UL_Other.keys())
+        return None
+    
 
 if __name__ == "__main__":
     urgency_list = UrgencyList()

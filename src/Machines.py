@@ -14,17 +14,16 @@ class Machines:
         self.mach6_frames = {}
         self.mach9_frames = {}
 
-        # Establish values for earlyStartTime & lateStartTime
-        self.early_start_time = datetime(2024, 3, 22, 6, 0, 0)
-        self.late_end_time = datetime(2024, 3, 22, 18, 30, 0)
+        # Maintain a dictionary to store jobs assigned to each machine
+        self.jobs_assigned = {
+            1: [], # Machine 2
+            2: [], # Machine 5
+            3: [], # Machine 6
+            4: [] # Machine 9
+        }
 
         # Establish Timeslot duration (30 minutes)
         self.slot_duration = timedelta(minutes=30)
-
-        # Calculation of Total Hours for Slot Count
-        schedule_duration = self.late_end_time - self.early_start_time
-        total_minutes = schedule_duration.total_seconds() / 60
-        self.slot_count = int(total_minutes / 30) + 1
 
     # Method to create slots & establish frame constraints for each machine
     def create(self, mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times):
@@ -41,12 +40,9 @@ class Machines:
                     print("Error: Not a current machine")
                     exit(0)
             
-            # for d, (start, end) in enumerate(day_times):
-            #     slot_count = self.calculate_slot_count(start, end)
             prev_loop = 0
             for d in range(len(day_times)):
                 start, end = day_times[d]
-                print("d -> ", d)
                 slot_count = Machines.calculate_slot_count(self, start, end)
 
                 # Timeslot creation
@@ -56,7 +52,6 @@ class Machines:
                     slot.set_end(slot.get_start() + self.slot_duration)
                     slot.set_availability(False)  # Set default availability
                     slot.set_assignment(None)  # Set default assignment
-                    #d * (slot_count - 1) + i
                     
                     curr_loop = i
                     if d == 0:
@@ -174,8 +169,8 @@ class Machines:
     def set_availability(self, machine_number, slot_number, availability):
         self.get_machine(machine_number)[slot_number].set_availability(availability)
 
-    def set_assignment(self, machine_number, slot_number, assignment):
-        self.get_machine(machine_number)[slot_number].set_assignment(assignment)
+    #def set_assignment(self, machine_number, slot_number, assignment):
+    #    self.get_machine(machine_number)[slot_number].set_assignment(assignment)
 
     # Getter methods for frame type, tier_a1, tier_a2 and tier_b compatibility properties of each machine
     def get_frame_type(self, machine_number, frame_number):
@@ -215,9 +210,57 @@ class Machines:
             return self.mach9_frames
         else:
             raise ValueError("Invalid frame number")
+    
+    # Getter method for slot count of a machine
+    def get_slot_count(self, machine_number):
+        day_times = None
+        if machine_number == 1:
+            day_times = self.mach2_day_times
+        elif machine_number == 2:
+            day_times = self.mach5_day_times
+        elif machine_number == 3:
+            day_times = self.mach6_day_times
+        elif machine_number == 4:
+            day_times = self.mach9_day_times
+        else:
+            raise ValueError("Invalid machine number")
+
+        total_slot_count = 0
+        for start, end in day_times:
+            total_slot_count += self.calculate_slot_count(start, end)
+
+        return total_slot_count
 
     # Method to calculate how many timeslots in a time period
     def calculate_slot_count(self, start, end):
         schedule_duration = end - start
         total_minutes = schedule_duration.total_seconds() / 60
         return int(total_minutes / 30) + 1
+    
+    # Setter method for assigning a job to a machine
+    def assign_job(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Add the job to the list of jobs assigned to the specified machine
+        self.jobs_assigned[machine_number].append(job)
+
+    # Getter method for retrieving the list of jobs assigned to a machine
+    def get_assigned_jobs(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Return the list of jobs assigned to the specified machine
+        return self.jobs_assigned[machine_number]
+
+    # Getter method for getting the last timeslot index for a machine
+    def get_last_timeslot_index(self, machine_number):
+        machine = self.get_machine(machine_number)
+        if not machine:
+            raise ValueError("Invalid machine number")
+
+        if not machine:
+            return None  # Return None if the machine has no timeslots
+
+        last_index = max(machine.keys()) if machine else None
+        return last_index

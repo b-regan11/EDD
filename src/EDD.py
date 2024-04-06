@@ -5,8 +5,9 @@ from FileSelection import FileSelection
 from BinPacking import BinPacking
 from Machines import Machines
 
+# Define the data
 mach2_day_times = [
-    (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
+    (datetime(2024, 3, 22, 5, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
     (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
     (datetime(2024, 3, 24, 14, 0, 0), datetime(2024, 3, 24, 18, 30, 0))
 ]
@@ -23,8 +24,31 @@ mach6_day_times = [
 mach9_day_times = [
     (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
     (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
-    (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+    (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 24, 18, 30, 0))
 ]
+
+# Combine the data into a list
+machines_day_times = [
+    mach2_day_times,
+    mach5_day_times,
+    mach6_day_times,
+    mach9_day_times
+]
+
+# # Find the earliest start and latest end
+earliest_start = None
+latest_end = None
+
+for day_times in machines_day_times:
+    for start, end in day_times:
+        if earliest_start is None or start < earliest_start:
+            earliest_start = start
+        if latest_end is None or end > latest_end:
+            latest_end = end
+
+# # Print the results
+print("Earliest start:", earliest_start)
+print("Latest end:", latest_end)
 
 # Call File Selection
 def run_file_selection():
@@ -46,7 +70,7 @@ def run_file_selection():
         # print("Start Date:", start_date)
         # print("End Date:", end_date)
 
-        # BinPacking.main(start_date, end_date, sorted_data)
+        #BinPacking.main(earliest_start, latest_end, sorted_data)
 
         machines = Machines()
         machines.create(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times)
