@@ -63,16 +63,16 @@ class Machines:
                     
                     if m == 1:
                         self.mach2_slot[index] = slot
-                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 2:
                         self.mach5_slot[index] = slot
-                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 3:
                         self.mach6_slot[index] = slot
-                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 4:
                         self.mach9_slot[index] = slot
-                        print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
+                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
 
             # Frame type creation
             for f in range(8):
@@ -169,8 +169,8 @@ class Machines:
     def set_availability(self, machine_number, slot_number, availability):
         self.get_machine(machine_number)[slot_number].set_availability(availability)
 
-    #def set_assignment(self, machine_number, slot_number, assignment):
-    #    self.get_machine(machine_number)[slot_number].set_assignment(assignment)
+    def set_assignment(self, machine_number, slot_number, assignment):
+        self.get_machine(machine_number)[slot_number].set_assignment(assignment)
 
     # Getter methods for frame type, tier_a1, tier_a2 and tier_b compatibility properties of each machine
     def get_frame_type(self, machine_number, frame_number):
@@ -238,6 +238,7 @@ class Machines:
         return int(total_minutes / 30) + 1
     
     # Setter method for assigning a job to a machine
+    # This should be called once for each job, this is independent of the timeslots
     def assign_job(self, machine_number, job):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
@@ -264,3 +265,15 @@ class Machines:
 
         last_index = max(machine.keys()) if machine else None
         return last_index
+    
+    def get_last_timeslot(self, machine_number):
+        machine = self.get_machine(machine_number)
+        if not machine:
+            raise ValueError("Invalid machine number")
+
+        if not machine:
+            return None  # Return None if the machine has no timeslots
+
+        last_index = max(machine.keys()) if machine else None
+        return self.get_machine(machine_number)[last_index].get_end()
+                
