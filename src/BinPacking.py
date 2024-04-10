@@ -139,12 +139,27 @@ class BinPacking:
             
                 # add job to the machine job list
                 machines.assign_job(current_machine, urgency_list.get_job(UL, j))
-
+                
+        print("\nAlgorithm Finished\n")
+        print("Below is the full list of assigned jobs: \n")
         print("jobs on machine 2: ", machines.get_assigned_job_nums(1))
         print("jobs on machine 5: ", machines.get_assigned_job_nums(2))
         print("jobs on machine 6: ", machines.get_assigned_job_nums(3))
         print("jobs on machine 9: ", machines.get_assigned_job_nums(4))
-        print("\nAlgorithm Finished")
+        
+        for m in range (1, 5):
+            machine_jobs = machines.get_assigned_job_nums(m)
+            if m == 1:
+                print("\nMachine 2\n")
+            elif m == 2:
+                print("\nMachine 5\n")
+            elif m == 3:
+                print("\nMachine 6\n")
+            elif m == 4:
+                print("\nMachine 9\n")
+            for j in range(len(machine_jobs)):
+                jobObj = machines.jobs_assigned[m]
+                print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
 
 
 # PLEASE READ...

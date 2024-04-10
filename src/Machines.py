@@ -33,7 +33,6 @@ class Machines:
             4: False   # Machine 9
         }
         
-
     # Method to create slots & establish frame constraints for each machine
     def create(self, mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times):
         for m in range(1, 5):
@@ -72,16 +71,12 @@ class Machines:
                     
                     if m == 1:
                         self.mach2_slot[index] = slot
-                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 2:
                         self.mach5_slot[index] = slot
-                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 3:
                         self.mach6_slot[index] = slot
-                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
                     elif m == 4:
                         self.mach9_slot[index] = slot
-                        #print("Machine: ", m, " | index: ", index, " | JobStart: ", slot.get_start(), " | JobEnd: ", slot.get_end())
 
             # Frame type creation
             for f in range(8):
@@ -161,7 +156,7 @@ class Machines:
                     print("Error: Not a current machine")
                     exit(0)
 
-    # Getter methods for start, end, availability and assignment properties of each machine
+    # Getter methods for start, end, availability and assignment properties of each machine based on slot index
     def get_start_time(self, machine_number, slot_number):
         return self.get_machine(machine_number)[slot_number].get_start()
 
@@ -286,7 +281,15 @@ class Machines:
         last_index = max(machine.keys()) if machine else None
         return self.get_machine(machine_number)[last_index].get_end()
     
-        # Getter method for retrieving the job numbers assigned to a machine
+    # Getter method for retrieving the job numbers assigned to a machine
+    def get_assigned_job_num(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Extract and return the job number from job object
+        job_num = job.get_Job_Num()
+        return job_num
+    
     def get_assigned_job_nums(self, machine_number):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
@@ -305,3 +308,20 @@ class Machines:
     # Setter method to set whether a machine is full
     def set_machine_full(self, machine_number, is_full):
         self.machine_full[machine_number] = is_full
+
+    def get_assigned_job_start(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Extract and return the job start from job object
+        job_start = job.get_Start()
+        return job_start
+
+    def get_assigned_job_end(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Extract and return the job start from job object
+        job_end = job.get_End()
+        return job_end
+    
