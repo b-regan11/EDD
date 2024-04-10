@@ -87,7 +87,7 @@ class Job:
 
     # Setters for each variable
     def set_Job_Num(self, job_num):
-        self.Job_Num = job_num
+        self.Job_Num = str(job_num)
     
     def set_Qty(self, qty):
         self.Qty = qty

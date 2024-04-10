@@ -19,12 +19,6 @@ class UrgencyList:
         overdue_attainable = UrgencyList_Data.query('production_hrs <= 25')  # 2
         overdue_unattainable = UrgencyList_Data.query('production_hrs > 25')  # 4
         other_list = sorted_data[(sorted_data['due_date'] > end_date + timedelta(days=3)) & (sorted_data['due_date'] < '2099-1-01')]  # 5
-        print(attainable)
-        print(overdue_attainable)
-        print(unattainable)
-        print(overdue_unattainable)
-        print(other_list)
-
 
         # Calculate the remainder number of jobs to fill in the other list to total 40 jobs
         Remainder = 40 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
