@@ -25,6 +25,15 @@ class Machines:
         # Establish Timeslot duration (30 minutes)
         self.slot_duration = timedelta(minutes=30)
 
+        # Boolean variables to indicate whether a machine is full
+        self.machine_full = {
+            1: False,  # Machine 2
+            2: False,  # Machine 5
+            3: False,  # Machine 6
+            4: False   # Machine 9
+        }
+        
+
     # Method to create slots & establish frame constraints for each machine
     def create(self, mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times):
         for m in range(1, 5):
@@ -276,4 +285,23 @@ class Machines:
 
         last_index = max(machine.keys()) if machine else None
         return self.get_machine(machine_number)[last_index].get_end()
-                
+    
+        # Getter method for retrieving the job numbers assigned to a machine
+    def get_assigned_job_nums(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        # Retrieve the list of jobs assigned to the specified machine
+        jobs = self.jobs_assigned[machine_number]
+
+        # Extract and return the job numbers from each job object
+        job_nums = [job.get_Job_Num() for job in jobs]
+        return job_nums
+    
+    # Getter method to retrieve whether a machine is full
+    def is_machine_full(self, machine_number):
+        return self.machine_full[machine_number]
+
+    # Setter method to set whether a machine is full
+    def set_machine_full(self, machine_number, is_full):
+        self.machine_full[machine_number] = is_full

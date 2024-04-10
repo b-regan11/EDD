@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from Job import Job
 
 class UrgencyList:
@@ -12,13 +12,19 @@ class UrgencyList:
 
     def create(self, start_date, end_date, sorted_data):
         # Urgency List Data split for Job Priorities
-        UrgencyList_Data = sorted_data[(sorted_data['due_date'] >= start_date) & (sorted_data['due_date'] <= end_date)]
+        UrgencyList_Data = sorted_data[(sorted_data['due_date'] >= start_date) & (sorted_data['due_date'] <= end_date + timedelta(days=3))]
         attainable = UrgencyList_Data.query('production_hrs <= 25')  # 1
         unattainable = UrgencyList_Data.query('production_hrs > 25')  # 3
         UrgencyList_Data = sorted_data[(sorted_data['due_date'] > '2020-1-01') & (sorted_data['due_date'] < start_date)]
         overdue_attainable = UrgencyList_Data.query('production_hrs <= 25')  # 2
         overdue_unattainable = UrgencyList_Data.query('production_hrs > 25')  # 4
-        other_list = sorted_data[(sorted_data['due_date'] > end_date) & (sorted_data['due_date'] < '2099-1-01')]  # 5
+        other_list = sorted_data[(sorted_data['due_date'] > end_date + timedelta(days=3)) & (sorted_data['due_date'] < '2099-1-01')]  # 5
+        print(attainable)
+        print(overdue_attainable)
+        print(unattainable)
+        print(overdue_unattainable)
+        print(other_list)
+
 
         # Calculate the remainder number of jobs to fill in the other list to total 40 jobs
         Remainder = 40 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
@@ -609,15 +615,35 @@ class UrgencyList:
     # getter methd for total job count in an urgency list
     def get_job_count(self, list_num):
         if list_num == 0:
-            return max(self.UL_Attainable.keys())
+            if len(self.UL_Attainable) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Attainable.keys()) + 1
         elif list_num == 1:
-            return max(self.UL_Overdue_Attainable.keys())
+            if len(self.UL_Overdue_Attainable) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Overdue_Attainable.keys()) + 1
         elif list_num == 2:
-            return max(self.UL_Unattainable.keys())
+            if len(self.UL_Unattainable) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Unattainable.keys()) + 1
         elif list_num == 3:
-            return max(self.UL_Overdue_Unattainable.keys())
+            if len(self.UL_Overdue_Unattainable) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Overdue_Unattainable.keys()) + 1
         elif list_num == 4:
-            return max(self.UL_Other.keys())
+            if len(self.UL_Other) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Other.keys()) + 1
         return None
     
 

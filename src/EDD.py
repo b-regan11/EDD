@@ -10,22 +10,22 @@ mach2_day_times = [
     (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
     (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
     (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
-    (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0)),
+    (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
 ]
 mach5_day_times = [
-#     (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
-#     (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
-#     (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+    (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
+    (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
+    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
+    (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
+    (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
 ]
 mach6_day_times = [
-#     (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
-#     (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
-#     (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 23, 18, 30, 0))
+    (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
+    (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
+    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
 ]
 mach9_day_times = [
-#     (datetime(2024, 3, 22, 6, 0, 0), datetime(2024, 3, 22, 18, 30, 0)),
-#     (datetime(2024, 3, 23, 6, 0, 0), datetime(2024, 3, 23, 10, 30, 0)),
-#     (datetime(2024, 3, 23, 14, 0, 0), datetime(2024, 3, 24, 18, 30, 0))
+    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
 ]
 
 # # Combine the data into a list
@@ -36,9 +36,9 @@ mach9_day_times = [
 #     mach9_day_times
 # ]
 
-# # # Find the earliest start and latest end
+# Find the earliest start and latest end
 earliest_start = datetime(2023, 4, 24, 6, 0, 0)
-latest_end = datetime(2023, 4, 27, 13, 30, 0)
+latest_end = datetime(2023, 4, 27, 13, 30, 0) # These should be auto calculated based on the machine running times
 
 # for day_times in machines_day_times:
 #     for start, end in day_times:
