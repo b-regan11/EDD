@@ -1,17 +1,5 @@
 # Before running program
-## 1. Install JDK (Java Development Kit)
-Link: https://learn.microsoft.com/en-us/java/openjdk/download
-### For Windows: 
-install 'Windows x64 msi file'.
-### For MacOS: 
-install 'macOS AArch64/M1 pkg file'.
-### To Verify Installation
-Run the following in terminal:
-```console
-java --version
-```
-
-## 2. Install Python
+## 1. Install Python
 Link: https://www.python.org/downloads/
 ### For Windows: 
 Click 'Download the latest version for Windows' at the top of page to install.
@@ -27,7 +15,7 @@ or
 python3 --version
 ```
 
-## 3. Install Pip
+## 2. Install Pip
 ### For MacOS:
 #### To Install:
 Run one of the following commands in terminal.
@@ -84,7 +72,7 @@ or
 ```console
 python3 -m pip install --upgrade pip
 ```
-## 4. Install Pandas
+## 3. Install Pandas
 ### To Install:
 Run one of the following commands in terminal.
 ```console
@@ -103,7 +91,7 @@ or
 ```console
 pip3 show pandas
 ```
-## 5. Install Wheel
+## 4. Install Wheel
 ### To Install:
 Run 'pip install wheel' OR 'pip3 install wheel'.
 Run one of the following commands in terminal.
@@ -126,7 +114,7 @@ or
 pip3 show wheel
 ```
 
-## 6. Install Openpyxl
+## 5. Install Openpyxl
 ### To Install:
 Run one of the following commands in terminal.
 ```console
