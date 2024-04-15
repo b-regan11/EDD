@@ -26,17 +26,46 @@ class BinPacking:
         mach9curr_start = None
 
         current_machine = 1 # No machine by default
+        
+        MA1 = 0
+        MA2 = 0
+        MB = 0
 
         machine_start_times = []
+        MA_start_times = []
+        MB_start_times = []
 
         for UL in range(5):
             UL_JobCount = urgency_list.get_job_count(UL)
             print("Urgency List -> ", UL)
             for j in range(UL_JobCount):
-                print("Job -> ", j)
+                print("Job Before-> ", j, " | List -> ", UL)
                 # calculate slots based on prod hrs
                 job_slots = machines.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=urgency_list.get_job_prod_hours(UL, j)))
                 print("Job Slots -> ", job_slots)
+
+                # ---------- Frame Implementation --------------------
+                # find the machine frame tiers
+                # for f in range(8):
+                #     for m in range(1,5):
+                #         print(machines.get_frame_list(m)[f])
+                #         machines.get_frame_type()
+                        
+                #         if machines.get_frame_type(m, f) == urgency_list.get_job_frame(UL, j):
+                #             if machines.get_tier_a1(m, f):
+                #                 print()
+                #                 print("IT WORKED")
+                #                 print()
+                #                 MA1 == m
+                #                 print("Machine (MA1) -> ", m, " | Frame -> ", f)
+                #             if machines.get_tier_a2(m, f):
+                #                 MA2 == m
+                #                 print("Machine (MA2) -> ", m, " | Frame -> ", f)
+                #             if machines.get_tier_b(m, f):
+                #                 MB == m
+                #                 print("Machine (MB) -> ", m, " | Frame -> ", f)
+                
+                # ---------- Frame Implementation Done --------------------
                 # find the machine with the earliest start time, until frames are implemented ...
                 # ... if there is a tie, go with smallest number: m2 -> m5 -> m6 -> m9.
                 # get the start time of each machine
@@ -78,7 +107,7 @@ class BinPacking:
                 elif first_mach == "M9":
                     current_machine = 4
                     #current_machine_slot = mach9_curr_slot
-                
+                print("current machine before changeover -> ", current_machine)
                 # ----------Changeover should be implemented here-----------
 
                 # calculate the number of slots for a changeover (2hrs = 5 slots) COMPLETE
@@ -180,7 +209,8 @@ class BinPacking:
                 if len(machine_start_times) == 0:
                     break
                 first_mach, first_start = machine_start_times[0]
-
+                
+                prev_machine = current_machine
                 if first_mach == "M2":
                     current_machine = 1
                 elif first_mach == "M5":
@@ -189,54 +219,67 @@ class BinPacking:
                     current_machine = 3
                 elif first_mach == "M9":
                     current_machine = 4
+                print("current machine after changeover -> ", current_machine)
 
                 # ----------Changeover should be ended here-----------
-                urgency_list.set_job_machine_assignment(UL, j, current_machine) # set the job to machine 
-                for sc in range(job_slots - 1):
-                    if sc == 0:
-                        # set the start time for job j in list UL
+                print("Job After-> ", j, " | List -> ", UL)
+                if prev_machine == current_machine:
+                    urgency_list.set_job_machine_assignment(UL, j, current_machine) # set the job to machine 
+                    for sc in range(job_slots - 1):
+                        if sc == 0:
+                            # set the start time for job j in list UL
+                            if first_mach == "M2":
+                                urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach2_curr_slot))
+                            elif first_mach == "M5":
+                                urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach5_curr_slot))
+                            elif first_mach == "M6":
+                                urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach6_curr_slot))
+                            elif first_mach == "M9":
+                                urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach9_curr_slot))
+                        # set the end time for job j in list UL
                         if first_mach == "M2":
-                            urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach2_curr_slot))
+                            urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach2_curr_slot)) 
                         elif first_mach == "M5":
-                            urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach5_curr_slot))
+                            urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach5_curr_slot)) 
                         elif first_mach == "M6":
-                            urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach6_curr_slot))
+                            urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach6_curr_slot)) 
                         elif first_mach == "M9":
-                            urgency_list.set_job_start(UL, j, machines.get_start_time(current_machine, mach9_curr_slot))
-                    # set the end time for job j in list UL
-                    if first_mach == "M2":
-                        urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach2_curr_slot)) 
-                    elif first_mach == "M5":
-                        urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach5_curr_slot)) 
-                    elif first_mach == "M6":
-                        urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach6_curr_slot)) 
-                    elif first_mach == "M9":
-                        urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach9_curr_slot)) 
-                    print("Job -> ", urgency_list.get_job_num(UL, j), " | Start -> ", urgency_list.get_job_start(UL, j), " | End -> ", urgency_list.get_job_end(UL, j))
+                            urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach9_curr_slot)) 
+                        print("Job -> ", urgency_list.get_job_num(UL, j), " | Start -> ", urgency_list.get_job_start(UL, j), " | End -> ", urgency_list.get_job_end(UL, j))
 
-                    if first_mach == "M2":
-                        machines.set_availability(current_machine, mach2_curr_slot, True)
-                        machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
-                    elif first_mach == "M5":
-                        machines.set_availability(current_machine, mach5_curr_slot, True)
-                        machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
-                    elif first_mach == "M6":
-                        machines.set_availability(current_machine, mach6_curr_slot, True)
-                        machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
-                    elif first_mach == "M9":
-                        machines.set_availability(current_machine, mach9_curr_slot, True)
-                        machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
-                    
-                    if machines.get_last_timeslot(current_machine) == urgency_list.get_job_end(UL ,j):
-                        if current_machine == 1:
-                            print("Machine 2 is full")
-                        elif current_machine == 2:
-                            print("Machine 5 is full")
-                        elif current_machine == 3:
-                            print("Machine 6 is full")
-                        elif current_machine == 4:
-                            print("Machine 9 is full")
-                        machines.set_machine_full(current_machine,True)
+                        if first_mach == "M2":
+                            machines.set_availability(current_machine, mach2_curr_slot, True)
+                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
+                        elif first_mach == "M5":
+                            machines.set_availability(current_machine, mach5_curr_slot, True)
+                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
+                        elif first_mach == "M6":
+                            machines.set_availability(current_machine, mach6_curr_slot, True)
+                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
+                        elif first_mach == "M9":
+                            machines.set_availability(current_machine, mach9_curr_slot, True)
+                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
+                        
+                        if machines.get_last_timeslot(current_machine) == urgency_list.get_job_end(UL ,j):
+                            if current_machine == 1:
+                                print("Machine 2 is full")
+                            elif current_machine == 2:
+                                print("Machine 5 is full")
+                            elif current_machine == 3:
+                                print("Machine 6 is full")
+                            elif current_machine == 4:
+                                print("Machine 9 is full")
+                            machines.set_machine_full(current_machine,True)
+
+                            if first_mach == "M2":
+                                mach2_curr_slot += 1    
+                            elif first_mach == "M5":
+                                mach5_curr_slot += 1
+                            elif first_mach == "M6":
+                                mach6_curr_slot += 1
+                            elif first_mach == "M9":
+                                mach9_curr_slot += 1
+                            break
 
                         if first_mach == "M2":
                             mach2_curr_slot += 1    
@@ -246,19 +289,11 @@ class BinPacking:
                             mach6_curr_slot += 1
                         elif first_mach == "M9":
                             mach9_curr_slot += 1
-                        break
-
-                    if first_mach == "M2":
-                        mach2_curr_slot += 1    
-                    elif first_mach == "M5":
-                        mach5_curr_slot += 1
-                    elif first_mach == "M6":
-                        mach6_curr_slot += 1
-                    elif first_mach == "M9":
-                        mach9_curr_slot += 1
-            
-                # add job to the machine job list
-                machines.assign_job(current_machine, urgency_list.get_job(UL, j))
+                
+                    # add job to the machine job list
+                    machines.assign_job(current_machine, urgency_list.get_job(UL, j))
+                    # else:
+                    #     break
                 
         print("\nAlgorithm Finished\n")
         print("Below is the full list of assigned jobs: \n")

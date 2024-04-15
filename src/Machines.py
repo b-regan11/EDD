@@ -9,10 +9,7 @@ class Machines:
         self.mach5_slot = {}
         self.mach6_slot = {}
         self.mach9_slot = {}
-        self.mach2_frames = {}
-        self.mach5_frames = {}
-        self.mach6_frames = {}
-        self.mach9_frames = {}
+        self.mach_frames = {}
 
         # Maintain a dictionary to store jobs assigned to each machine
         self.jobs_assigned = {
@@ -78,83 +75,61 @@ class Machines:
                     elif m == 4:
                         self.mach9_slot[index] = slot
 
-            # Frame type creation
-            for f in range(8):
-                frame = Frame()
-                # Set Default Tier Values
-                frame.set_tier_a1(False)
-                frame.set_tier_a2(False)
-                frame.set_tier_b(False)
+        # Frame type creation
+        for f in range(8):
+            frame = Frame()
+            # Set Default Tier Values
+            frame.set_tierA1(0)
+            frame.set_tierA2(0)
+            frame.set_tierB(0)
 
-                # Set Frame Types and Tiered Preferences
-                if f == 0:
-                    frame.set_frame_type("Small")
-                    if m == 1:
-                        frame.set_tier_a1(True)  # Machine 2
-                    elif m == 2:
-                        frame.set_tier_b(True)  # Machine 5
-                    elif m == 3:
-                        frame.set_tier_a2(True)  # Machine 6
-                elif f == 1:
-                    frame.set_frame_type("Round")
-                    if m == 1:
-                        frame.set_tier_a2(True)  # Machine 2
-                    elif m == 2:
-                        frame.set_tier_b(True)  # Machine 5
-                    elif m == 3:
-                        frame.set_tier_a1(True)  # Machine 6
-                elif f == 2:
-                    frame.set_frame_type("Rectangle")
-                    if m == 1:
-                        frame.set_tier_a1(True)  # Machine 2
-                    elif m == 2:
-                        frame.set_tier_b(True)  # Machine 5
-                    elif m == 3:
-                        frame.set_tier_a2(True)  # Machine 6
-                elif f == 3:
-                    frame.set_frame_type("Short Large-T")
-                    if m == 2:
-                        frame.set_tier_a1(True)  # Machine 5
-                elif f == 4:
-                    frame.set_frame_type("Large-T")
-                    if m == 2:
-                        frame.set_tier_a1(True)  # Machine 5
-                    elif m == 3:
-                        frame.set_tier_a2(True)  # Machine 6
-                    elif m == 4:
-                        frame.set_tier_b(True)  # Machine 9
-                elif f == 5:
-                    frame.set_frame_type("Small Self Contain")
-                    if m == 2:
-                        frame.set_tier_a1(True)  # Machine 5
-                    elif m == 3:
-                        frame.set_tier_a2(True)  # Machine 6
-                elif f == 6:
-                    frame.set_frame_type("Self Contain")
-                    if m == 4:
-                        frame.set_tier_a1(True)  # Machine 9
-                elif f == 7:
-                    frame.set_frame_type("XL-T")
-                    if m == 2:
-                        frame.set_tier_b(True)  # Machine 5
-                    elif m == 4:
-                        frame.set_tier_a1(True)  # Machine 9
-                else:
-                    print("Error: Not a current frame")
-                    exit(0)
+            # Set Frame Types and Tiered Preferences
+            if f == 0:
+                frame.name("Small")
+                frame.set_tierA1(1) # Machine 2
+                frame.set_tierA2(3) # Machine 6
+                frame.set_tierB(2) # Machine 5
+            elif f == 1:
+                frame.name("Round")
+                frame.set_tierA1(3) # Machine 6
+                frame.set_tierA2(1) # Machine 2
+                frame.set_tierB(2) # Machine 5
+            elif f == 2:
+                frame.name("Rectangle")
+                frame.set_tierA1(1) 
+                frame.set_tierA2(3) 
+                frame.set_tierB(2) 
+            elif f == 3:
+                frame.name("Short Large-T")
+                frame.set_tierA1(2) 
+                frame.set_tierA2(0) 
+                frame.set_tierB(0) 
+            elif f == 4:
+                frame.name("Large-T")
+                frame.set_tierA1(2) 
+                frame.set_tierA2(3) 
+                frame.set_tierB(4) 
+            elif f == 5:
+                frame.name("Small Self Contain")
+                frame.set_tierA1(2) 
+                frame.set_tierA2(3) 
+                frame.set_tierB(0) 
+            elif f == 6:
+                frame.name("Self Contain")
+                frame.set_tierA1(4) 
+                frame.set_tierA2(0) 
+                frame.set_tierB(0) 
+            elif f == 7:
+                frame.name("XL-T")
+                frame.set_tierA1(4) 
+                frame.set_tierA2(0) 
+                frame.set_tierB(2) 
+            else:
+                print("Error: Not a current frame")
+                exit(0)
 
-                # Adding Frames to Dictionaries
-                if m == 1:
-                    self.mach2_frames[f] = frame
-                elif m == 2:
-                    self.mach5_frames[f] = frame
-                elif m == 3:
-                    self.mach6_frames[f] = frame
-                elif m == 4:
-                    self.mach9_frames[f] = frame
-                else:
-                    print("Error: Not a current machine")
-                    exit(0)
+            # Adding Frames to Dictionaries
+            self.mach_frames[f] = frame
 
     # Getter methods for start, end, availability and assignment properties of each machine based on slot index
     def get_start_time(self, machine_number, slot_number):
@@ -176,18 +151,22 @@ class Machines:
     def set_assignment(self, machine_number, slot_number, assignment):
         self.get_machine(machine_number)[slot_number].set_assignment(assignment)
 
-    # Getter methods for frame type, tier_a1, tier_a2 and tier_b compatibility properties of each machine
-    def get_frame_type(self, machine_number, frame_number):
-        return self.get_frame_list(machine_number)[frame_number].get_frame_type()
+    # Getter methods for frame names, and machine tiers
+    def get_frame_name(self, frame_num):
+        frame_obj = self.mach_frames[frame_num]
+        return frame_obj.get_name()
 
-    def get_tier_a1(self, machine_number, frame_number):
-        return self.get_frame_list(machine_number)[frame_number].get_tier_a1()
-
-    def get_tier_a2(self, machine_number, frame_number):
-        return self.get_frame_list(machine_number)[frame_number].get_tier_a2()
-
-    def get_tier_b(self, machine_number, frame_number):
-        return self.get_frame_list(machine_number)[frame_number].get_tier_b()
+    def get_frame_tierA1_machine(self, frame_num):
+        frame_obj = self.mach_frames[frame_num]
+        return frame_obj.get_get_tierA1()
+    
+    def get_frame_tierA2_machine(self, frame_num):
+        frame_obj = self.mach_frames[frame_num]
+        return frame_obj.get_get_tierA2()
+    
+    def get_frame_tierB_machine(self, frame_num):
+        frame_obj = self.mach_frames[frame_num]
+        return frame_obj.get_get_tierB()
 
     # Helper method to get the machine based on the machine number
     def get_machine(self, machine_number):
