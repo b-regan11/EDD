@@ -1,0 +1,17 @@
+#--------GUI Layout-----------------------
+# Wepco Logo
+# Create button is the only button on screen
+    # -> Select File page w/ Excel window
+        # -> Job Preference; gives a list of all job | due date combinations which can be prioritized. Limit of 5 jobs. 
+            # -> Operating Hours confirmation
+                # -> Confirmation w/ list of information
+                    # -> Output
+                        # This will have a text display, displaying what jobs have been assigned to each machine and when.
+                        # There will be a download option to download the Excel output
+# Side Buttons:
+    # Exit button available throughout to exit program
+    # (Would be nice)
+        # Back button would be nice to have too, however unknown if this is doable
+        # Reload button to reload / rerun the entire program
+
+#ADD MORE TRY-CATCHES TO EDD
