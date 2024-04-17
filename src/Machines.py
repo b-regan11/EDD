@@ -85,42 +85,42 @@ class Machines:
 
             # Set Frame Types and Tiered Preferences
             if f == 0:
-                frame.name("Small")
+                frame.set_name("Small-T")
                 frame.set_tierA1(1) # Machine 2
                 frame.set_tierA2(3) # Machine 6
                 frame.set_tierB(2) # Machine 5
             elif f == 1:
-                frame.name("Round")
+                frame.set_name("Round")
                 frame.set_tierA1(3) # Machine 6
                 frame.set_tierA2(1) # Machine 2
                 frame.set_tierB(2) # Machine 5
             elif f == 2:
-                frame.name("Rectangle")
+                frame.set_name("Rectangle")
                 frame.set_tierA1(1) 
                 frame.set_tierA2(3) 
                 frame.set_tierB(2) 
             elif f == 3:
-                frame.name("Short Large-T")
+                frame.set_name("Short Large-T")
                 frame.set_tierA1(2) 
                 frame.set_tierA2(0) 
                 frame.set_tierB(0) 
             elif f == 4:
-                frame.name("Large-T")
+                frame.set_name("Large-T")
                 frame.set_tierA1(2) 
                 frame.set_tierA2(3) 
                 frame.set_tierB(4) 
             elif f == 5:
-                frame.name("Small Self Contain")
+                frame.set_name("Small Self-Contained")
                 frame.set_tierA1(2) 
                 frame.set_tierA2(3) 
                 frame.set_tierB(0) 
             elif f == 6:
-                frame.name("Self Contain")
+                frame.set_name("Self Contained")
                 frame.set_tierA1(4) 
                 frame.set_tierA2(0) 
                 frame.set_tierB(0) 
             elif f == 7:
-                frame.name("XL-T")
+                frame.set_name("XL-T")
                 frame.set_tierA1(4) 
                 frame.set_tierA2(0) 
                 frame.set_tierB(2) 
@@ -156,17 +156,17 @@ class Machines:
         frame_obj = self.mach_frames[frame_num]
         return frame_obj.get_name()
 
-    def get_frame_tierA1_machine(self, frame_num):
-        frame_obj = self.mach_frames[frame_num]
-        return frame_obj.get_get_tierA1()
+    def get_frame_tierA1_machine(self, frame_num): # returns the tierA1 machine based on the frame (frame_num)
+        frameObj = self.mach_frames[frame_num]
+        return frameObj.get_tierA1()
     
     def get_frame_tierA2_machine(self, frame_num):
-        frame_obj = self.mach_frames[frame_num]
-        return frame_obj.get_get_tierA2()
+        frameObj = self.mach_frames[frame_num]
+        return frameObj.get_tierA2()
     
     def get_frame_tierB_machine(self, frame_num):
-        frame_obj = self.mach_frames[frame_num]
-        return frame_obj.get_get_tierB()
+        frameObj = self.mach_frames[frame_num]
+        return frameObj.get_tierB()
 
     # Helper method to get the machine based on the machine number
     def get_machine(self, machine_number):
@@ -304,3 +304,10 @@ class Machines:
         job_end = job.get_End()
         return job_end
     
+
+    def get_frame_index_by_name(self, frame_name):
+        for index, frame in self.mach_frames.items():
+            if frame.get_name() == frame_name:
+                return index
+        # If the frame name is not found, return None or raise an error
+        return None
