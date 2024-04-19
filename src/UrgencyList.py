@@ -23,11 +23,11 @@ class UrgencyList:
         # Calculate the remainder number of jobs to fill in the other list to total 40 jobs
         Remainder = 40 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
         other_list = other_list.iloc[:Remainder]  # Return extra rows to make sure there isn't more than 40 rows of data
-        print(attainable)
-        print(overdue_attainable)
-        print(unattainable)
-        print(overdue_unattainable)
-        print(other_list)
+        # print(attainable)
+        # print(overdue_attainable)
+        # print(unattainable)
+        # print(overdue_unattainable)
+        # print(other_list)
         
         for UL in range(5):
             if UL == 0: # Attainable

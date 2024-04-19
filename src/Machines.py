@@ -138,12 +138,6 @@ class Machines:
     def get_end_time(self, machine_number, slot_number):
         return self.get_machine(machine_number)[slot_number].get_end()
 
-    def get_availability(self, machine_number, slot_number):
-        return self.get_machine(machine_number)[slot_number].get_availability()
-
-    def get_assignment(self, machine_number, slot_number):
-        return self.get_machine(machine_number)[slot_number].get_assignment()
-
     # setter methods for availability and assignment properties of each machine
     def set_availability(self, machine_number, slot_number, availability):
         self.get_machine(machine_number)[slot_number].set_availability(availability)
@@ -151,11 +145,7 @@ class Machines:
     def set_assignment(self, machine_number, slot_number, assignment):
         self.get_machine(machine_number)[slot_number].set_assignment(assignment)
 
-    # Getter methods for frame names, and machine tiers
-    def get_frame_name(self, frame_num):
-        frame_obj = self.mach_frames[frame_num]
-        return frame_obj.get_name()
-
+    # Getter methods for machine tiers
     def get_frame_tierA1_machine(self, frame_num): # returns the tierA1 machine based on the frame (frame_num)
         frameObj = self.mach_frames[frame_num]
         return frameObj.get_tierA1()
@@ -181,51 +171,17 @@ class Machines:
         else:
             raise ValueError("Invalid machine number")
 
-    # Helper method to get the frame hashmap based on the machine number
-    def get_frame_list(self, machine_number):
-        if machine_number == 1:
-            return self.mach2_frames
-        elif machine_number == 2:
-            return self.mach5_frames
-        elif machine_number == 3:
-            return self.mach6_frames
-        elif machine_number == 4:
-            return self.mach9_frames
-        else:
-            raise ValueError("Invalid frame number")
-    
-    # Getter method for slot count of a machine
-    def get_slot_count(self, machine_number):
-        day_times = None
-        if machine_number == 1:
-            day_times = self.mach2_day_times
-        elif machine_number == 2:
-            day_times = self.mach5_day_times
-        elif machine_number == 3:
-            day_times = self.mach6_day_times
-        elif machine_number == 4:
-            day_times = self.mach9_day_times
-        else:
-            raise ValueError("Invalid machine number")
-
-        total_slot_count = 0
-        for start, end in day_times:
-            total_slot_count += self.calculate_slot_count(start, end)
-
-        return total_slot_count
-
     # Method to calculate how many timeslots in a time period
     def calculate_slot_count(self, start, end):
         schedule_duration = end - start
         total_minutes = schedule_duration.total_seconds() / 60
         return int(total_minutes / 30) + 1
     
-    # Setter method for assigning a job to a machine
+    # # Setter method for assigning a job to a machine
     # This should be called once for each job, this is independent of the timeslots
     def assign_job(self, machine_number, job):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
-
         # Add the job to the list of jobs assigned to the specified machine
         self.jobs_assigned[machine_number].append(job)
 
@@ -233,60 +189,43 @@ class Machines:
     def get_assigned_jobs(self, machine_number):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
-
         # Return the list of jobs assigned to the specified machine
         return self.jobs_assigned[machine_number]
 
-    # Getter method for getting the last timeslot index for a machine
-    def get_last_timeslot_index(self, machine_number):
-        machine = self.get_machine(machine_number)
-        if not machine:
-            raise ValueError("Invalid machine number")
-
-        if not machine:
-            return None  # Return None if the machine has no timeslots
-
-        last_index = max(machine.keys()) if machine else None
-        return last_index
-    
+    # Getter method for getting the last timeslot for a machine
     def get_last_timeslot(self, machine_number):
         machine = self.get_machine(machine_number)
         if not machine:
             raise ValueError("Invalid machine number")
-
         if not machine:
             return None  # Return None if the machine has no timeslots
-
         last_index = max(machine.keys()) if machine else None
         return self.get_machine(machine_number)[last_index].get_end()
     
     # Getter method for retrieving the job numbers assigned to a machine
-    def get_assigned_job_num(self, machine_number, job):
-        if machine_number not in [1, 2, 3, 4]:
-            raise ValueError("Invalid machine number")
-
-        # Extract and return the job number from job object
-        job_num = job.get_Job_Num()
-        return job_num
-    
     def get_assigned_job_nums(self, machine_number):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
-
         # Retrieve the list of jobs assigned to the specified machine
         jobs = self.jobs_assigned[machine_number]
-
         # Extract and return the job numbers from each job object
         job_nums = [job.get_Job_Num() for job in jobs]
         return job_nums
     
-    # Getter method to retrieve whether a machine is full
+    # # Getter method to retrieve whether a machine is full
     def is_machine_full(self, machine_number):
         return self.machine_full[machine_number]
 
-    # Setter method to set whether a machine is full
+    # # Setter method to set whether a machine is full
     def set_machine_full(self, machine_number, is_full):
         self.machine_full[machine_number] = is_full
+
+    def get_frame_index_by_name(self, frame_name):
+        for index, frame in self.mach_frames.items():
+            if frame.get_name() == frame_name:
+                return index
+        # If the frame name is not found, return None or raise an error
+        return None
 
     def get_assigned_job_start(self, machine_number, job):
         if machine_number not in [1, 2, 3, 4]:
@@ -303,11 +242,3 @@ class Machines:
         # Extract and return the job start from job object
         job_end = job.get_End()
         return job_end
-    
-
-    def get_frame_index_by_name(self, frame_name):
-        for index, frame in self.mach_frames.items():
-            if frame.get_name() == frame_name:
-                return index
-        # If the frame name is not found, return None or raise an error
-        return None

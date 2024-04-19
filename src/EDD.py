@@ -5,6 +5,7 @@ from FileSelection import FileSelection
 from BinPacking import BinPacking
 from Machines import Machines
 
+# ------------- This section will be resolved to a separate method w/ user input later on
 # Define the data
 mach2_day_times = [
     # Week4
@@ -75,37 +76,72 @@ mach9_day_times = [
     (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
-
 # Combine all day times into one list
 all_day_times = mach2_day_times + mach5_day_times + mach6_day_times + mach9_day_times
-
 # Find the earliest start and latest end
 earliest_start = min(start for start, _ in all_day_times)
 latest_end = max(end for _, end in all_day_times)
 
+# print("Start: ", earliest_start)
+# print("End: ", latest_end)
 
-print("Start: ", earliest_start)
-print("End: ", latest_end)
+sorted_data = None
+
+#---------------------- End of Section --------------------
+
+# Call the main menu function
+def menu():
+    print("\nWelcome to the Wepco Scheduling Application")
+    print("\nChoose an option: \n Select File - Type 'File' \n Create Solution-0 - Type 'Create' ")
+    answer_menu = input().lower()
+    global sorted_data
+
+    if answer_menu == "file":
+        selected_file_path, sorted_data = run_file_selection()
+        print("Python program selected file path:", selected_file_path)
+        menu()
+    elif answer_menu == "create":
+        if sorted_data is not None:
+            machines = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
+            print("jobs on machine 2: ", machines.get_assigned_job_nums(1))
+            print("jobs on machine 5: ", machines.get_assigned_job_nums(2))
+            print("jobs on machine 6: ", machines.get_assigned_job_nums(3))
+            print("jobs on machine 9: ", machines.get_assigned_job_nums(4))
+
+            for m in range (1, 5):
+                machine_jobs = machines.get_assigned_job_nums(m)
+                if m == 1:
+                    print("\nMachine 2\n")
+                elif m == 2:
+                    print("\nMachine 5\n")
+                elif m == 3:
+                    print("\nMachine 6\n")
+                elif m == 4:
+                    print("\nMachine 9\n")
+                for j in range(len(machine_jobs)):
+                    jobObj = machines.jobs_assigned[m]
+                    print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
+            exit(0)
+        else:
+            print("No sorted data returned. Exiting.")
+            menu()
+
 
 # Call File Selection
 def run_file_selection():
     file_selector = FileSelection()
     selected_file_path = file_selector.main()
-
+    global sorted_data
     if selected_file_path:
-        print("Python program selected file path:", selected_file_path)
-
         # Read Excel file & Sort based on job status
         raw_data = pd.read_excel(selected_file_path, "TempQueryName")
         sorted_data = raw_data.query('Completed == "Received" or Completed == "Not Started"')
         sorted_data = sorted_data.sort_values(by=['due_date'])
-        return sorted_data
+        return selected_file_path, sorted_data
     else:
         print("No file path returned by the Python program.")
-        return None
+        return None, None
+    
+# Main method
 if __name__ == "__main__":
-    sorted_data = run_file_selection()  # Capture the returned sorted data
-    if sorted_data is not None:
-        BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
-    else:
-        print("No sorted data returned. Exiting.")
+    menu()
