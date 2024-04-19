@@ -12,10 +12,10 @@ class UrgencyList:
 
     def create(self, start_date, end_date, sorted_data):
         # Urgency List Data split for Job Priorities
-        UrgencyList_Data = sorted_data[(sorted_data['due_date'] >= start_date) & (sorted_data['due_date'] <= end_date + timedelta(days=2))]
+        UrgencyList_Data = sorted_data[(sorted_data['due_date'] >= start_date - timedelta(days=0.5)) & (sorted_data['due_date'] <= end_date + timedelta(days=2))]
         attainable = UrgencyList_Data.query('production_hrs <= 25')  # 1
         unattainable = UrgencyList_Data.query('production_hrs > 25')  # 3
-        UrgencyList_Data = sorted_data[(sorted_data['due_date'] > '2020-1-01') & (sorted_data['due_date'] < start_date)]
+        UrgencyList_Data = sorted_data[(sorted_data['due_date'] > '2023-1-01') & (sorted_data['due_date'] < start_date - timedelta(days=0.5))]
         overdue_attainable = UrgencyList_Data.query('production_hrs <= 25')  # 2
         overdue_unattainable = UrgencyList_Data.query('production_hrs > 25')  # 4
         other_list = sorted_data[(sorted_data['due_date'] > end_date + timedelta(days=2)) & (sorted_data['due_date'] < '2099-1-01')]  # 5
@@ -23,11 +23,11 @@ class UrgencyList:
         # Calculate the remainder number of jobs to fill in the other list to total 40 jobs
         Remainder = 40 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
         other_list = other_list.iloc[:Remainder]  # Return extra rows to make sure there isn't more than 40 rows of data
-        # print(attainable)
-        # print(overdue_attainable)
-        # print(unattainable)
-        # print(overdue_unattainable)
-        # print(other_list)
+        print(attainable)
+        print(overdue_attainable)
+        print(unattainable)
+        print(overdue_unattainable)
+        print(other_list)
         
         for UL in range(5):
             if UL == 0: # Attainable

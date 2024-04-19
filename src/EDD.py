@@ -7,25 +7,73 @@ from Machines import Machines
 
 # Define the data
 mach2_day_times = [
-    (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-    (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
-    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
-    (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
+    # Week4
+    # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
+    # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
+    # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
+    # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
+    # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach5_day_times = [
-    (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-    (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
-    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
-    (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
-    (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
+    # Week4
+    # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
+    # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
+    # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
+    # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
+    # (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
+    # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach6_day_times = [
-    (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-    (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
-    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
+    # Week4
+    # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
+    # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
+    # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
+    # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach9_day_times = [
-    (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
+    # Week4
+    # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
+    # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 10, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 16, 0, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 
 # Combine all day times into one list

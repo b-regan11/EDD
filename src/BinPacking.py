@@ -25,13 +25,9 @@ class BinPacking:
         mach6curr_start = None
         mach9curr_start = None
 
-        current_machine = 1 # No machine by default
+        current_machine = 1 # default default
         
-        machine_start_times = []    # this should be obsolete by the time solution0 is done
-        # machineA start times should be used until its empty, then machineB start times
-
-        machineA_start_times = []
-        machineB_start_times = []
+        machine_start_times = []
 
         for UL in range(5):
             UL_JobCount = urgency_list.get_job_count(UL)
@@ -40,30 +36,21 @@ class BinPacking:
                 # print("Job Before-> ", j, " | List -> ", UL)
                 # calculate slots based on prod hrs
                 job_slots = machines.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=urgency_list.get_job_prod_hours(UL, j)))
-                # print("Job Slots -> ", job_slots)
+                print("Job -> ", urgency_list.get_job_num(UL, j), " | Job Slots -> ", job_slots)
 
                 # ---------- Frame Implementation --------------------
                 frame_name = urgency_list.get_job_frame(UL, j)
                 frame_num = machines.get_frame_index_by_name(frame_name)
+                # if there is no frame for the job
                 if frame_num == None:
-                    # print("no frame so it should skip")
                     continue
                 else:
                     # print(frame_name, " -> is index -> ", frame_num)
                     MA1 = machines.get_frame_tierA1_machine(frame_num)
                     MA2 = machines.get_frame_tierA2_machine(frame_num)
                     MB = machines.get_frame_tierB_machine(frame_num)
-                    # if MA1 != 0:
-                    #     print("Machine -> ", MA1, " | is Tier A1 for frame -> ", frame_name)
-                    # if MA2 != 0:
-                    #     print("Machine -> ", MA2, " | is Tier A2 for frame -> ", frame_name)
-                    # if MB != 0:
-                    #     print("Machine -> ", MB, " | is Tier B for frame -> ", frame_name)
-                
+
                 # ---------- Frame Implementation Done --------------------
-                # find the machine with the earliest start time, until frames are implemented ...
-                # ... if there is a tie, go with smallest number: m2 -> m5 -> m6 -> m9.
-                # get the start time of each machine
                 if machines.is_machine_full(1) == False:
                     mach2curr_start = machines.get_start_time(1, mach2_curr_slot)
                 if machines.is_machine_full(2) == False:
@@ -130,8 +117,10 @@ class BinPacking:
                 # find earliest start time of all machines
                 machine_start_times.sort(key=lambda tup: tup[1])
                 if len(machine_start_times) == 0:
-                    break
+                    continue
                 first_mach, first_start = machine_start_times[0]
+                # print("Here is the first machine -> ", first_mach)
+                # print("MA1 -> ", MA1, " | MA2 -> ", MA2, " | MB -> ", MB)
 
                 if first_mach == "MA1":
                     if MA1 == 1:
@@ -163,7 +152,6 @@ class BinPacking:
                     elif MB == 4:
                         current_machine = 4
                 
-                    
                 # print("current machine before changeover -> ", current_machine)
                 # ----------Changeover should be implemented here-----------
 
@@ -239,45 +227,44 @@ class BinPacking:
                     if first_mach == "MA1":
                         if MA1 == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
                         elif MA1 == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
                         elif MA1 == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
                         elif MA1 == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
-                            #machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
                     
                     elif first_mach == "MA2":
                         if MA2 == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
                         elif MA2 == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
                         elif MA2 == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
                         elif MA2 == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
 
                     elif first_mach == "MB":
                         if MB == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, )
+                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
                         elif MB == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
                         elif MB == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
                         elif MB == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
+                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
                     
                     if machines.get_last_timeslot(current_machine) == changeover.End:
                         if current_machine == 1:
@@ -289,7 +276,6 @@ class BinPacking:
                         elif current_machine == 4:
                             print("Machine 9 is full")
                         machines.set_machine_full(current_machine,True)
-                        # machines.assign_job(current_machine, urgency_list.get_job(UL, j))
 
                         if first_mach == "MA1":
                             if MA1 == 1:
@@ -320,6 +306,9 @@ class BinPacking:
                                 mach6_curr_slot += 1
                             elif MB == 4:
                                 mach9_curr_slot += 1
+                        urgency_list.set_job_start(UL, j, changeover_start)
+                        urgency_list.set_job_end(UL, j, changeover_end)
+                        machines.assign_job(current_machine, urgency_list.get_job(UL, j))
                         break
 
                     if first_mach == "MA1":
@@ -409,7 +398,7 @@ class BinPacking:
                 # find earliest start time of all machines
                 machine_start_times.sort(key=lambda tup: tup[1])
                 if len(machine_start_times) == 0:
-                    break
+                    continue
                 first_mach, first_start = machine_start_times[0]
                 
                 prev_machine = current_machine

@@ -22,3 +22,6 @@ button.place(relx=0.5, rely=0.7, anchor=CENTER)
 
 # Running the app
 root.mainloop()
+
+
+# White and transparent backgrounds are bad to work with
