@@ -185,13 +185,6 @@ class Machines:
         # Add the job to the list of jobs assigned to the specified machine
         self.jobs_assigned[machine_number].append(job)
 
-    # Getter method for retrieving the list of jobs assigned to a machine
-    def get_assigned_jobs(self, machine_number):
-        if machine_number not in [1, 2, 3, 4]:
-            raise ValueError("Invalid machine number")
-        # Return the list of jobs assigned to the specified machine
-        return self.jobs_assigned[machine_number]
-
     # Getter method for getting the last timeslot for a machine
     def get_last_timeslot(self, machine_number):
         machine = self.get_machine(machine_number)
@@ -202,21 +195,12 @@ class Machines:
         last_index = max(machine.keys()) if machine else None
         return self.get_machine(machine_number)[last_index].get_end()
     
-    # Getter method for retrieving the job numbers assigned to a machine
-    def get_assigned_job_nums(self, machine_number):
-        if machine_number not in [1, 2, 3, 4]:
-            raise ValueError("Invalid machine number")
-        # Retrieve the list of jobs assigned to the specified machine
-        jobs = self.jobs_assigned[machine_number]
-        # Extract and return the job numbers from each job object
-        job_nums = [job.get_Job_Num() for job in jobs]
-        return job_nums
     
     # # Getter method to retrieve whether a machine is full
     def is_machine_full(self, machine_number):
         return self.machine_full[machine_number]
 
-    # # Setter method to set whether a machine is full
+    # Setter method to set whether a machine is full
     def set_machine_full(self, machine_number, is_full):
         self.machine_full[machine_number] = is_full
 
@@ -227,10 +211,27 @@ class Machines:
         # If the frame name is not found, return None or raise an error
         return None
 
+    # Getter method for retrieving the list of jobs assigned to a machine
+    def get_assigned_jobs(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+        # Return the list of jobs assigned to the specified machine
+        return self.jobs_assigned[machine_number]
+
+    # Getter method for retrieving the job numbers assigned to a machine
+    def get_assigned_job_nums(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+        # Retrieve the list of jobs assigned to the specified machine
+        jobs = self.jobs_assigned[machine_number]
+        # Extract and return the job numbers from each job object
+        job_nums = [job.get_Job_Num() for job in jobs]
+        return job_nums
+
+
     def get_assigned_job_start(self, machine_number, job):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
-
         # Extract and return the job start from job object
         job_start = job.get_Start()
         return job_start
@@ -238,7 +239,33 @@ class Machines:
     def get_assigned_job_end(self, machine_number, job):
         if machine_number not in [1, 2, 3, 4]:
             raise ValueError("Invalid machine number")
-
         # Extract and return the job start from job object
         job_end = job.get_End()
         return job_end
+    
+    def get_assigned_job_num(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+        # Extract and return the job frame from the job object
+        job_num = job.get_Job_Num()
+        return job_num
+    
+    def get_assigned_job_frame(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+        # Extract and return the job frame from the job object
+        job_frame = job.get_Frame()
+        return job_frame
+    
+    def get_assigned_job_color(self, machine_number, job):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+        # Extract and return the job frame from the job object
+        job_color = job.get_Overall_Color()
+        return job_color
+
+
+
+
+
+    

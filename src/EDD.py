@@ -4,6 +4,7 @@ import pandas as pd
 from FileSelection import FileSelection
 from BinPacking import BinPacking
 from Machines import Machines
+from SimilaritySwap import SimilaritySwap
 
 # ------------- This section will be resolved to a separate method w/ user input later on
 # Define the data
@@ -121,7 +122,9 @@ def menu():
                 for j in range(len(machine_jobs)):
                     jobObj = machines.jobs_assigned[m]
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
-            exit(0)
+            # exit(0)
+            SimilaritySwap.main(machines)
+
         else:
             print("No sorted data returned. Exiting.")
             menu()
