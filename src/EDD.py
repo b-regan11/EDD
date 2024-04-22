@@ -123,7 +123,8 @@ def menu():
                     jobObj = machines.jobs_assigned[m]
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
             # exit(0)
-            SimilaritySwap.main(machines)
+            FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines)
+            SimilaritySwap.reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
 
         else:
             print("No sorted data returned. Exiting.")

@@ -7,7 +7,7 @@ from Changeover import Changeover
 from BinPacking import BinPacking
 
 class SimilaritySwap:
-    def main(machines):
+    def create(machines):
         # From / To Chart for Frame Ranking
         FromTo_Frames = [
             ["FromTo", "Small-T", "Round", "Rectangle", "Short Large-T", "Small Self-Contained", "Large-T", "Self Contained", "XL-T"],
@@ -92,7 +92,7 @@ class SimilaritySwap:
             # Replacing the None values w/ values from the FromTo_Frames matrix based on each job's frame
             for i in range(len(FromTo_MachJobs)):
                 for j in range(len(FromTo_MachJobs[i])):
-                    if FromTo_MachJobs[i][j] is 0:    
+                    if FromTo_MachJobs[i][j] == 0:    
                         # Find the From/To job combination for each cell
                         From_Job = FromTo_MachJobs[i][0]
                         To_Job = FromTo_MachJobs[0][j]
@@ -123,7 +123,7 @@ class SimilaritySwap:
                         # Color Compatibility Value (Higher value means less compatible)
                         ColorCV = FromTo_Colors[FromTo_Colors[0].index(From_Job_ColorGroup)][FromTo_Colors[0].index(To_Job_ColorGroup)]
 
-                        TotalCV = (2*FrameCV) + ColorCV
+                        TotalCV = round((2*FrameCV) + ColorCV, 2)
                         
                         if m == 1:
                             FromTo_Mach2Jobs[i][j] = TotalCV
@@ -135,42 +135,115 @@ class SimilaritySwap:
                             FromTo_Mach9Jobs[i][j] = TotalCV
 
             # This is a method for verifying jobs by job_num
-            for i in range(len(FromTo_MachJobs)):
-                for j in range(len(FromTo_MachJobs[i])):
-                    # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
-                    if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
-                        Job_Obj = FromTo_MachJobs[i][j]
-                        Job_Num = machines.get_assigned_job_num(m, Job_Obj)
-                        if m == 1:
-                            FromTo_Mach2Jobs[i][j] = Job_Num
-                        elif m == 2:
-                            FromTo_Mach5Jobs[i][j] = Job_Num
-                        elif m == 3:
-                            FromTo_Mach6Jobs[i][j] = Job_Num
-                        elif m == 4:
-                            FromTo_Mach9Jobs[i][j] = Job_Num
-
-
+            # for i in range(len(FromTo_MachJobs)):
+            #     for j in range(len(FromTo_MachJobs[i])):
+            #         # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
+            #         if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
+            #             Job_Obj = FromTo_MachJobs[i][j]
+            #             Job_Num = machines.get_assigned_job_num(m, Job_Obj)
+            #             if m == 1:
+            #                 FromTo_Mach2Jobs[i][j] = Job_Num
+            #             elif m == 2:
+            #                 FromTo_Mach5Jobs[i][j] = Job_Num
+            #             elif m == 3:
+            #                 FromTo_Mach6Jobs[i][j] = Job_Num
+            #             elif m == 4:
+            #                 FromTo_Mach9Jobs[i][j] = Job_Num
+        
         #--------------------- Print the tables -----------------------
-        print("Here is the Machine 2 From / To Job Matrix")
+        # print("Here is the Machine 2 From / To Job Matrix")
         # print(machines.get_assigned_job_nums(1))
-        for row in FromTo_Mach2Jobs:
-            print(row)
+        # for row in FromTo_Mach2Jobs:
+        #     print(row)
 
-        print("Here is the Machine 5 From / To Job Matrix")
+        # print("Here is the Machine 5 From / To Job Matrix")
         # print(machines.get_assigned_job_nums(2))
-        for row in FromTo_Mach5Jobs:
-            print(row)
+        # for row in FromTo_Mach5Jobs:
+        #     print(row)
 
-        print("Here is the Machine 6 From / To Job Matrix")
+        # print("Here is the Machine 6 From / To Job Matrix")
         # print(machines.get_assigned_job_nums(3))
-        for row in FromTo_Mach6Jobs:
-            print(row)
+        # for row in FromTo_Mach6Jobs:
+        #     print(row)
 
-        print("Here is the Machine 9 From / To Job Matrix")
+        # print("Here is the Machine 9 From / To Job Matrix")
         # print(machines.get_assigned_job_nums(4))
-        for row in FromTo_Mach9Jobs:
-            print(row)
+        # for row in FromTo_Mach9Jobs:
+        #     print(row)
+        
+        print("\nJob Compatibility Value Matrices Created\n")
 
-if __name__ == "__main__":
-    SimilaritySwap.main()
+        return FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs
+        
+    def reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, iteration):
+        if isinstance(iteration, int):
+            print("This will be solution-", iteration)
+        else:
+            print("Iteration value needs to be an integer")
+            exit(0)
+        
+        for m in range(1, 5):
+            if m == 1:
+                temp_matrix = [row[:] for row in FromTo_Mach2Jobs]
+                mach_name = 2
+            elif m == 2:
+                temp_matrix = [row[:] for row in FromTo_Mach5Jobs]
+                mach_name = 5
+            elif m == 3:
+                temp_matrix = [row[:] for row in FromTo_Mach6Jobs]
+                mach_name = 6
+            elif m == 4:
+                temp_matrix = [row[:] for row in FromTo_Mach9Jobs]
+                mach_name = 9
+        
+            Original_Job_Order = temp_matrix[0][1:]
+            New_Job_Order = []
+
+            # this keeps the last job as the last job in the first loop iteration
+            Prev_CV = temp_matrix[0][-1]
+            New_Job_Order.append(Prev_CV)
+
+            # iterate through each job
+            for _ in range(len(temp_matrix[0]) - 2):
+                # identify the starting column
+                From_Job_Column = Prev_CV
+                
+                # find the index of the column header matching the previous CV
+                column_index = temp_matrix[0].index(From_Job_Column)
+        
+                # Delete row starting with Smallest_To_Job
+                del temp_matrix[column_index]
+
+                # find the job / row with the smallest CV
+                Smallest_CV = float('inf')
+                Smallest_From_Job = None
+                for r in range(1, len(temp_matrix)):
+                    CV = temp_matrix[r][column_index]
+                    if CV <= Smallest_CV:
+                        Smallest_CV = CV
+                        Smallest_From_Job = temp_matrix[r][0]
+
+                # delete the corresponding row and column
+                del temp_matrix[0][column_index]
+                for row in temp_matrix[1:]:
+                    del row[column_index]
+
+                Prev_CV = Smallest_From_Job
+                New_Job_Order.append(Prev_CV)
+
+            New_Job_Order = New_Job_Order[::-1]
+            print("------- Machine ", mach_name, " -------------------------")
+            print("Here is the original earliest due date job order -> ", Original_Job_Order)
+            print("Here is the proposed alternative job order -> ", New_Job_Order)
+            if m == 1:
+                Mach2_New_Order = New_Job_Order
+            elif m == 2:
+                Mach5_New_Order = New_Job_Order
+            elif m == 3:
+                Mach6_New_Order = New_Job_Order
+            elif m == 4:
+                Mach9_New_Order = New_Job_Order
+            
+        return Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order
+
+
