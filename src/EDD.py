@@ -144,7 +144,22 @@ def MainMenu():
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
             # exit(0)
             FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines)
-            SimilaritySwap.reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
+            Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
+            mach_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
+            for m in range (1, 5):
+                machine_jobs = mach_alt.get_assigned_job_nums(m)
+                if m == 1:
+                    print("\nMachine 2\n")
+                elif m == 2:
+                    print("\nMachine 5\n")
+                elif m == 3:
+                    print("\nMachine 6\n")
+                elif m == 4:
+                    print("\nMachine 9\n")
+                for j in range(len(machine_jobs)):
+                    jobObj = mach_alt.jobs_assigned[m]
+                    print("Job: ", machine_jobs[j], " | StartTime -> ", mach_alt.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", mach_alt.get_assigned_job_end(m, jobObj[j]))
+
 
         else:
             print("No sorted data returned. Exiting.")

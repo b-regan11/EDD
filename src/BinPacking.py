@@ -26,7 +26,7 @@ class BinPacking:
         mach6curr_start = None
         mach9curr_start = None
 
-        current_machine = 1 # default default
+        current_machine = 1 # default
         
         machine_start_times = []
 
@@ -35,7 +35,7 @@ class BinPacking:
             # print("Urgency List -> ", UL)
             for j in range(UL_JobCount):
                 # print("Job Before-> ", j, " | List -> ", UL)
-                # calculate slots based on prod hrs
+                # calculate slots based on prod hrs for job j
                 job_slots = machines.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=urgency_list.get_job_prod_hours(UL, j)))
                 # print("Job -> ", urgency_list.get_job_num(UL, j), " | Job Slots -> ", job_slots)
 

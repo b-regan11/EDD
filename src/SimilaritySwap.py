@@ -5,8 +5,10 @@ from UrgencyList import UrgencyList
 from Machines import Machines
 from Changeover import Changeover
 from BinPacking import BinPacking
+from Job import Job
 
 class SimilaritySwap:
+    # the create method is used to create job to job matrices for each machine
     def create(machines):
         # From / To Chart for Frame Ranking
         FromTo_Frames = [
@@ -134,21 +136,21 @@ class SimilaritySwap:
                         elif m == 4:
                             FromTo_Mach9Jobs[i][j] = TotalCV
 
-            # This is a method for verifying jobs by job_num
-            for i in range(len(FromTo_MachJobs)):
-                for j in range(len(FromTo_MachJobs[i])):
-                    # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
-                    if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
-                        Job_Obj = FromTo_MachJobs[i][j]
-                        Job_Num = machines.get_assigned_job_num(m, Job_Obj)
-                        if m == 1:
-                            FromTo_Mach2Jobs[i][j] = Job_Num
-                        elif m == 2:
-                            FromTo_Mach5Jobs[i][j] = Job_Num
-                        elif m == 3:
-                            FromTo_Mach6Jobs[i][j] = Job_Num
-                        elif m == 4:
-                            FromTo_Mach9Jobs[i][j] = Job_Num
+            # # This is a method for verifying jobs by job_num
+            # for i in range(len(FromTo_MachJobs)):
+            #     for j in range(len(FromTo_MachJobs[i])):
+            #         # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
+            #         if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
+            #             Job_Obj = FromTo_MachJobs[i][j]
+            #             Job_Num = machines.get_assigned_job_num(m, Job_Obj)
+            #             if m == 1:
+            #                 FromTo_Mach2Jobs[i][j] = Job_Num
+            #             elif m == 2:
+            #                 FromTo_Mach5Jobs[i][j] = Job_Num
+            #             elif m == 3:
+            #                 FromTo_Mach6Jobs[i][j] = Job_Num
+            #             elif m == 4:
+            #                 FromTo_Mach9Jobs[i][j] = Job_Num
         
         #--------------------- Print the tables -----------------------
         # print("Here is the Machine 2 From / To Job Matrix")
@@ -175,7 +177,7 @@ class SimilaritySwap:
 
         return FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs
         
-    def reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, iteration):
+    def job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, iteration):
         if isinstance(iteration, int):
             print("This will be solution-", iteration)
         else:
@@ -244,6 +246,234 @@ class SimilaritySwap:
             elif m == 4:
                 Mach9_New_Order = New_Job_Order
             
+        # below is where the new job order will be assigned to timeslots for each machine
         return Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order
+    
+    def time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order):
 
+        machines_alt = Machines()
+        machines_alt.create(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times)
 
+        mach2_curr_slot = 0
+        mach5_curr_slot = 0
+        mach6_curr_slot = 0
+        mach9_curr_slot = 0
+
+        mach2curr_start = None
+        mach5curr_start = None
+        mach6curr_start = None
+        mach9curr_start = None
+
+        # current_machine = 1 # default 
+
+        machine_start_times = []
+
+        for m in range(1, 5):
+            if m == 1:
+                New_Job_Order = Mach2_New_Order
+            elif m == 2:
+                New_Job_Order = Mach5_New_Order
+            elif m == 3:
+                New_Job_Order = Mach6_New_Order
+            elif m == 4:
+                New_Job_Order = Mach9_New_Order
+
+            New_Job_Order_Count = len(New_Job_Order)
+            for j in range(New_Job_Order_Count):
+                job_obj = New_Job_Order[j]
+                
+                # calculate slots based on prod hrs for job j
+                job_slots = machines_alt.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=job_obj.get_ProductionHours()))
+
+                # frame implementation
+                frame_name = job_obj.get_Frame()
+                frame_num = machines_alt.get_frame_index_by_name(frame_name)
+                if frame_num == None:
+                    continue # frame_num should never equal None but just incase it does
+
+                if machines_alt.is_machine_full(m) == False:
+                    if m == 1:
+                        mach2curr_start = machines_alt.get_start_time(m, mach2_curr_slot)
+                    elif m == 2:
+                        mach5curr_start = machines_alt.get_start_time(m, mach5_curr_slot)
+                    elif m == 3:
+                        mach6curr_start = machines_alt.get_start_time(m, mach6_curr_slot)
+                    elif m == 4:
+                        mach9curr_start = machines_alt.get_start_time(m, mach9_curr_slot)
+                
+                # if machine is full, it will not be selectable
+                machine_start_times.clear()
+                if machines_alt.is_machine_full(m) == False:
+                    if m == 1:
+                        machine_start_times.append(mach2curr_start)
+                    elif m == 2:
+                        machine_start_times.append(mach5curr_start)
+                    elif m == 3:
+                        machine_start_times.append(mach6curr_start)
+                    elif m == 4:
+                        machine_start_times.append(mach9curr_start)
+                
+                # if machine_start_times is empty, end loop
+                if len(machine_start_times) == 0:
+                    continue
+                # current_machine = m
+
+                for ch in range(4):
+                    if ch == 0:
+                        if m == 1:
+                            changeover_start = machines_alt.get_start_time(m, mach2_curr_slot)
+                        elif m == 2:
+                            changeover_start = machines_alt.get_start_time(m, mach5_curr_slot)
+                        elif m == 3:
+                            changeover_start = machines_alt.get_start_time(m, mach6_curr_slot)
+                        elif m == 4:
+                            changeover_start = machines_alt.get_start_time(m, mach9_curr_slot)
+                    if m == 1:
+                        changeover_end = machines_alt.get_end_time(m, mach2_curr_slot)
+                    elif m == 2:
+                        changeover_end = machines_alt.get_end_time(m, mach5_curr_slot)
+                    elif m == 3:
+                        changeover_end = machines_alt.get_end_time(m, mach6_curr_slot)
+                    elif m == 4:
+                        changeover_end = machines_alt.get_end_time(m, mach9_curr_slot)
+                    
+                    changeover = Changeover()
+                    changeover.set_start(changeover_start)
+                    changeover.set_end(changeover_end)
+                    changeover.set_jobB_num(job_obj)
+
+                    if m == 1:
+                        machines_alt.set_availability(m, mach2_curr_slot, True)
+                        machines_alt.set_assignment(m, mach2_curr_slot, job_obj)
+                    elif m == 2:
+                        machines_alt.set_availability(m, mach5_curr_slot, True)
+                        machines_alt.set_assignment(m, mach5_curr_slot, job_obj)
+                    elif m == 3:
+                        machines_alt.set_availability(m, mach6_curr_slot, True)
+                        machines_alt.set_assignment(m, mach6_curr_slot, job_obj)
+                    elif m == 4:
+                        machines_alt.set_availability(m, mach9_curr_slot, True)
+                        machines_alt.set_assignment(m, mach9_curr_slot, job_obj)
+
+                    if machines_alt.get_last_timeslot(m) == changeover.End:
+                        if m == 1:
+                            print("Machine 2 is full")
+                        elif m == 2:
+                            print("Machine 5 is full")
+                        elif m == 3:
+                            print("Machine 6 is full")
+                        elif m == 4:
+                            print("Machine 9 is full")
+                        machines_alt.set_machine_full(m,True)
+
+                        if m == 1:
+                            mach2_curr_slot += 1
+                        elif m == 2:
+                            mach5_curr_slot += 1
+                        elif m == 3:
+                            mach6_curr_slot += 1
+                        elif m == 4:
+                            mach9_curr_slot += 1
+                        
+                        job_obj.set_Start(changeover_start)
+                        job_obj.set_End(changeover_end)
+                        job_obj.set_Machine_Assignment(m)
+                        break
+
+                    if m == 1:
+                        mach2_curr_slot += 1
+                    elif m == 2:
+                        mach5_curr_slot += 1
+                    elif m == 3:
+                        mach6_curr_slot += 1
+                    elif m == 4:
+                        mach9_curr_slot += 1
+                
+                # if machine is full, it will not be selectable
+                machine_start_times.clear()
+                if machines_alt.is_machine_full(m) == False:
+                    if m == 1:
+                        machine_start_times.append(mach2curr_start)
+                    elif m == 2:
+                        machine_start_times.append(mach5curr_start)
+                    elif m == 3:
+                        machine_start_times.append(mach6curr_start)
+                    elif m == 4:
+                        machine_start_times.append(mach9curr_start)
+                
+                # if machine_start_times is empty, end loop
+                if len(machine_start_times) == 0:
+                    continue
+                # changeover ends
+
+                job_obj.set_Machine_Assignment(m)
+                for sc in range(job_slots - 1):
+                    if sc == 0:
+                        # set the start time for job j
+                        if m == 1:
+                            job_obj.set_Start(machines_alt.get_start_time(m, mach2_curr_slot))
+                        elif m == 2:
+                            job_obj.set_Start(machines_alt.get_start_time(m, mach5_curr_slot))
+                        elif m == 3:
+                            job_obj.set_Start(machines_alt.get_start_time(m, mach6_curr_slot))
+                        elif m == 4:
+                            job_obj.set_Start(machines_alt.get_start_time(m, mach9_curr_slot))
+                    
+                    # set the end time for job j
+                    if m == 1:
+                        job_obj.set_End(machines_alt.get_end_time(m, mach2_curr_slot))
+                    elif m == 2:
+                        job_obj.set_End(machines_alt.get_end_time(m, mach5_curr_slot))
+                    elif m == 3:
+                        job_obj.set_End(machines_alt.get_end_time(m, mach6_curr_slot))
+                    elif m == 4:
+                        job_obj.set_End(machines_alt.get_end_time(m, mach9_curr_slot))
+
+                    if m == 1:
+                        machines_alt.set_availability(m, mach2_curr_slot, True)
+                        machines_alt.set_assignment(m, mach2_curr_slot, job_obj)
+                    elif m == 2:
+                        machines_alt.set_availability(m, mach5_curr_slot, True)
+                        machines_alt.set_assignment(m, mach5_curr_slot, job_obj)
+                    elif m == 3:
+                        machines_alt.set_availability(m, mach6_curr_slot, True)
+                        machines_alt.set_assignment(m, mach6_curr_slot, job_obj)
+                    elif m == 4:
+                        machines_alt.set_availability(m, mach9_curr_slot, True)
+                        machines_alt.set_assignment(m, mach9_curr_slot, job_obj)
+
+                    # print("Here is the last timeslot -> ", machines_alt.get_last_timeslot(m), " | and Here is job_obj Start -> ", job_obj.get_Start(), " | and Here is job_obj End -> ", job_obj.get_End())
+                    if machines_alt.get_last_timeslot(m) == job_obj.get_End():
+                        if m == 1:
+                            print("Machine 2 is full")
+                        elif m == 2:
+                            print("Machine 5 is full")
+                        elif m == 3:
+                            print("Machine 6 is full")
+                        elif m == 4:
+                            print("Machine 9 is full")
+                        machines_alt.set_machine_full(m,True)
+
+                        if m == 1:
+                            mach2_curr_slot += 1
+                        elif m == 2:
+                            mach5_curr_slot += 1
+                        elif m == 3:
+                            mach6_curr_slot += 1
+                        elif m == 4:
+                            mach9_curr_slot += 1
+                        break
+                    
+                    if m == 1:
+                        mach2_curr_slot += 1
+                    elif m == 2:
+                        mach5_curr_slot += 1
+                    elif m == 3:
+                        mach6_curr_slot += 1
+                    elif m == 4:
+                        mach9_curr_slot += 1
+                
+                machines_alt.assign_job(m, job_obj)
+        print("\nNew Job Time Calculations Done\n")
+        
+        return machines_alt
