@@ -135,20 +135,20 @@ class SimilaritySwap:
                             FromTo_Mach9Jobs[i][j] = TotalCV
 
             # This is a method for verifying jobs by job_num
-            # for i in range(len(FromTo_MachJobs)):
-            #     for j in range(len(FromTo_MachJobs[i])):
-            #         # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
-            #         if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
-            #             Job_Obj = FromTo_MachJobs[i][j]
-            #             Job_Num = machines.get_assigned_job_num(m, Job_Obj)
-            #             if m == 1:
-            #                 FromTo_Mach2Jobs[i][j] = Job_Num
-            #             elif m == 2:
-            #                 FromTo_Mach5Jobs[i][j] = Job_Num
-            #             elif m == 3:
-            #                 FromTo_Mach6Jobs[i][j] = Job_Num
-            #             elif m == 4:
-            #                 FromTo_Mach9Jobs[i][j] = Job_Num
+            for i in range(len(FromTo_MachJobs)):
+                for j in range(len(FromTo_MachJobs[i])):
+                    # if (FromTo_MachJobs[i][j] is not int) and (FromTo_MachJobs[i][j] is not "FromTo"):
+                    if ((i >= 1) and (j == 0)) or ((i == 0) and (j >= 1)):
+                        Job_Obj = FromTo_MachJobs[i][j]
+                        Job_Num = machines.get_assigned_job_num(m, Job_Obj)
+                        if m == 1:
+                            FromTo_Mach2Jobs[i][j] = Job_Num
+                        elif m == 2:
+                            FromTo_Mach5Jobs[i][j] = Job_Num
+                        elif m == 3:
+                            FromTo_Mach6Jobs[i][j] = Job_Num
+                        elif m == 4:
+                            FromTo_Mach9Jobs[i][j] = Job_Num
         
         #--------------------- Print the tables -----------------------
         # print("Here is the Machine 2 From / To Job Matrix")

@@ -5,6 +5,9 @@ from FileSelection import FileSelection
 from BinPacking import BinPacking
 from Machines import Machines
 from SimilaritySwap import SimilaritySwap
+import tkinter as tk
+import tkinter.messagebox as messagebox
+from PIL import ImageTk, Image
 
 # ------------- This section will be resolved to a separate method w/ user input later on
 # Define the data
@@ -89,19 +92,36 @@ latest_end = max(end for _, end in all_day_times)
 sorted_data = None
 
 #---------------------- End of Section --------------------
+# method to test if GUI window is open, quit if not open
+def check_window_status(window):
+    def on_closing():
+        print("Window is closed.")
+        window.quit()
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+    print("Window is open")
 
-# Call the main menu function
-def menu():
-    print("\nWelcome to the Wepco Scheduling Application")
-    print("\nChoose an option: \n Select File - Type 'File' \n Create Solution-0 - Type 'Create' ")
-    answer_menu = input().lower()
-    global sorted_data
+def MainMenu():
+    def show_message_box(title, message):
+        messagebox.showinfo(title, message)
 
-    if answer_menu == "file":
-        selected_file_path, sorted_data = run_file_selection()
-        print("Python program selected file path:", selected_file_path)
-        menu()
-    elif answer_menu == "create":
+    def click_file_selection_button():
+        global sorted_data
+        print("Choosing File")
+        try:
+            selected_file_path, sorted_data = run_file_selection()
+            print("Python program selected file path:", selected_file_path)
+             # Extract file name from file path
+            file_name = os.path.basename(selected_file_path)
+            file_name_label.config(text="Selected File: " + file_name)  
+            createButton.config(state=tk.NORMAL)
+        except Exception as e:
+            # show_message_box("Error", str(e))
+            show_message_box("Error", "Please select another file.\nExcel files (.xlsx) only.\nFile must be in correct format.")
+            print("Please select an Excel file")
+            
+    def click_create_schedule_button():
+        global sorted_data
+        print("Running BinPacking Method")
         if sorted_data is not None:
             machines = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
             print("jobs on machine 2: ", machines.get_assigned_job_nums(1))
@@ -128,7 +148,57 @@ def menu():
 
         else:
             print("No sorted data returned. Exiting.")
-            menu()
+        
+    # sets sorted_data as a global variable
+    global sorted_data
+
+    # creates a tkinter GUI window
+    root = tk.Tk()
+    root.title("Wepco Plastics Job Scheduling Software")
+    root.configure(bg="white")
+
+    # disable window resizing
+    root.resizable(False, False)
+
+    image = Image.open("Resources/WepcoLogo.png")
+    photo = ImageTk.PhotoImage(image)
+
+    # set window dimensions
+    root.minsize(700, 500)
+    root.maxsize(700, 500)
+
+    # create a frame to hold Main Menu components
+    frame = tk.Frame(root)
+    frame.pack(expand=True)
+
+    # create the image label
+    image_label = tk.Label(frame, image=photo)
+    image_label.grid(row=0, column=0, padx=5, pady=5)
+    image_label.configure(bg="white")
+
+    # create the file name label
+    file_name_label = tk.Label(frame, text="", bg="white", height=2)
+    file_name_label.grid(row=1, column=0, padx=5, pady=(5,0))
+
+    # create the file selection button
+    fileSelectionButton = tk.Button(frame, text="File Selection", width=10, height=2, command=click_file_selection_button)
+    fileSelectionButton.grid(row=2, column=0, padx=5, pady=(10,5))
+
+    # create the create schedule button
+    createButton = tk.Button(frame, text="Create Schedule", width=10, height=2, command=click_create_schedule_button)
+    createButton.grid(row=3, column=0, padx=5, pady=5)
+    createButton.config(state=tk.DISABLED)
+
+    # center the frame in the window
+    frame.pack_propagate(False)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    frame.configure(bg="white")
+
+    # check the window status
+    check_window_status(root)
+
+    # runs window
+    root.mainloop()
 
 
 # Call File Selection
@@ -148,4 +218,4 @@ def run_file_selection():
     
 # Main method
 if __name__ == "__main__":
-    menu()
+    MainMenu()
