@@ -98,7 +98,7 @@ class SimilaritySwap:
                         # Find the From/To job combination for each cell
                         From_Job = FromTo_MachJobs[i][0]
                         To_Job = FromTo_MachJobs[0][j]
-                        
+
                         # Find the From/To frame combination for each cell
                         From_Job_Frame = machines.get_assigned_job_frame(m, From_Job)
                         To_Job_Frame = machines.get_assigned_job_frame(m, To_Job)
@@ -106,13 +106,13 @@ class SimilaritySwap:
                         # Find the From/To color combination for each cell
                         From_Job_Color = machines.get_assigned_job_color(m, From_Job)
                         To_Job_Color = machines.get_assigned_job_color(m, To_Job)
-
+                        
                         # Cycle through each row header to find Job Color in the header
                         for row_index in range(1, len(FromTo_Colors)):
                             From_ColorGroup = FromTo_Colors[row_index][0]
                             if From_Job_Color in From_ColorGroup:
                                 From_Job_ColorGroup = From_ColorGroup
-                        
+
                         # Cycle through each column header to find Job Color in the header
                         for col_index in range(1, len(FromTo_Colors[0])):
                             To_ColorGroup = FromTo_Colors[0][col_index]
@@ -234,9 +234,6 @@ class SimilaritySwap:
                 New_Job_Order.append(Prev_CV)
 
             New_Job_Order = New_Job_Order[::-1]
-            print("------- Machine ", mach_name, " -------------------------")
-            print("Here is the original earliest due date job order -> ", Original_Job_Order)
-            print("Here is the proposed alternative job order -> ", New_Job_Order)
             if m == 1:
                 Mach2_New_Order = New_Job_Order
             elif m == 2:
@@ -250,7 +247,6 @@ class SimilaritySwap:
         return Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order
     
     def time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order):
-
         machines_alt = Machines()
         machines_alt.create(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times)
 
@@ -280,7 +276,46 @@ class SimilaritySwap:
 
             New_Job_Order_Count = len(New_Job_Order)
             for j in range(New_Job_Order_Count):
-                job_obj = New_Job_Order[j]
+                # create new job object for this new machine obj
+                job_obj_orig = New_Job_Order[j]
+                job_obj = Job()
+
+                # transfer the job values except start and end times
+                new_job_num = job_obj_orig.get_Job_Num()
+                new_qty = job_obj_orig.get_Qty()
+                new_prod_hrs = job_obj_orig.get_ProductionHours()
+                new_deadline = job_obj_orig.get_Deadline()
+                new_status = job_obj_orig.get_Status()
+                new_po_num = job_obj_orig.get_PO_Num()
+                new_so_num = job_obj_orig.get_SO_Num()
+                new_po_price = job_obj_orig.get_PO_Price()
+                new_frame = job_obj_orig.get_Frame()
+                new_lbs = job_obj_orig.get_Lbs()
+                new_material_id = job_obj_orig.get_Material_ID()
+                new_material_name = job_obj_orig.get_Material_Name()
+                new_cost_per_lb = job_obj_orig.get_Cost_Per_Pound()
+                new_colorant_id = job_obj_orig.get_Colorant_ID()
+                new_colorant_name = job_obj_orig.get_Colorant_Name()
+                new_overall_color = job_obj_orig.get_Overall_Color()
+                new_machine_assignment = job_obj_orig.get_Machine_Assignment()
+
+                job_obj.set_Job_Num(new_job_num)
+                job_obj.set_Qty(new_qty)
+                job_obj.set_ProductionHours(new_prod_hrs)
+                job_obj.set_Deadline(new_deadline)
+                job_obj.set_Status(new_status)
+                job_obj.set_PO_Num(new_po_num)
+                job_obj.set_SO_Num(new_so_num)
+                job_obj.set_PO_Price(new_po_price)
+                job_obj.set_Frame(new_frame)
+                job_obj.set_Lbs(new_lbs)
+                job_obj.set_Material_ID(new_material_id)
+                job_obj.set_Material_Name(new_material_name)
+                job_obj.set_Cost_Per_Pound(new_cost_per_lb)
+                job_obj.set_Colorant_ID(new_colorant_id)
+                job_obj.set_Colorant_Name(new_colorant_name)
+                job_obj.set_Overall_Color(new_overall_color)
+                job_obj.set_Machine_Assignment(new_machine_assignment)
                 
                 # calculate slots based on prod hrs for job j
                 job_slots = machines_alt.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=job_obj.get_ProductionHours()))
@@ -316,7 +351,6 @@ class SimilaritySwap:
                 # if machine_start_times is empty, end loop
                 if len(machine_start_times) == 0:
                     continue
-                # current_machine = m
 
                 for ch in range(4):
                     if ch == 0:
@@ -378,6 +412,7 @@ class SimilaritySwap:
                         job_obj.set_Start(changeover_start)
                         job_obj.set_End(changeover_end)
                         job_obj.set_Machine_Assignment(m)
+                        machines_alt.assign_job(m, job_obj)
                         break
 
                     if m == 1:
@@ -453,6 +488,7 @@ class SimilaritySwap:
                         elif m == 4:
                             print("Machine 9 is full")
                         machines_alt.set_machine_full(m,True)
+                        job_obj.set_Finished(False)
 
                         if m == 1:
                             mach2_curr_slot += 1
@@ -473,7 +509,119 @@ class SimilaritySwap:
                     elif m == 4:
                         mach9_curr_slot += 1
                 
+                job_obj.set_Finished(True)
                 machines_alt.assign_job(m, job_obj)
         print("\nNew Job Time Calculations Done\n")
         
         return machines_alt
+    
+    def comparison(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, machines_orig, machines_alt, latest_end_date):
+        # print("nothing to see here")
+        # machines_orig = Machines()
+        # machines_alt = Machines()
+        machines_os = Machines() # optimal solution
+        machines_os.create(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times)
+
+
+        # time_assignment messes up the original machine job times
+
+        latest_end_date = latest_end_date + timedelta(days=2)
+        for m in range(1, 5):
+            # if m == 1:
+            #     print("MACHINE 2")
+            # elif m == 2:
+            #     print("MACHINE 5")
+            # elif m == 3:
+            #     print("MACHINE 6")
+            # elif m == 4:
+            #     print("MACHINE 9")
+            jobs_orig = machines_orig.get_assigned_jobs(m)
+            jobs_alt = machines_alt.get_assigned_jobs(m)
+            overdue_count = 0
+            for s in range(2):
+                if s == 0:
+                    jobs_list = jobs_orig
+                elif s == 1:
+                    jobs_list = jobs_alt
+                total_late = 0
+                total_on_time = 0
+                for j in range(len(jobs_list)):
+                    job = jobs_list[j]
+                    # job = Job()
+                    job_deadline = job.get_Deadline()
+                    job_end = job.get_End()
+                    job_finished = job.get_Finished()
+                    # find list of jobs that could be overdue
+                    if job_deadline <= latest_end_date:
+                        if (job_finished == False) or (job_end > job_deadline):
+                            # job is late
+                            # status = "late"
+                            total_late += 1
+                        else:
+                            # job is on-time
+                            # status = "on-time"
+                            total_on_time += 1
+                # print("Solution -", s, "Total Late -> ", total_late, "Total OnTime -> ", total_on_time)
+                if s == 0:
+                    solution0_late = total_late
+                    solution0_ontime = total_on_time
+                elif s == 1:
+                    solution1_late = total_late
+                    solution1_ontime = total_on_time
+            
+            # choose solution 0 if there are less late jobs, otherwise, choose solution 1
+            if solution0_late < solution1_late:
+                os_jobs = machines_orig.get_assigned_jobs(m)
+            elif solution0_late >= solution1_late:
+                os_jobs = machines_alt.get_assigned_jobs(m)
+            
+            for j in range(len(os_jobs)):
+                curr_job = os_jobs[j]
+                new_job = Job()
+
+                new_job_num = curr_job.get_Job_Num()
+                new_qty = curr_job.get_Qty()
+                new_prod_hrs = curr_job.get_ProductionHours()
+                new_deadline = curr_job.get_Deadline()
+                new_status = curr_job.get_Status()
+                new_po_num = curr_job.get_PO_Num()
+                new_so_num = curr_job.get_SO_Num()
+                new_po_price = curr_job.get_PO_Price()
+                new_frame = curr_job.get_Frame()
+                new_lbs = curr_job.get_Lbs()
+                new_material_id = curr_job.get_Material_ID()
+                new_material_name = curr_job.get_Material_Name()
+                new_cost_per_lb = curr_job.get_Cost_Per_Pound()
+                new_colorant_id = curr_job.get_Colorant_ID()
+                new_colorant_name = curr_job.get_Colorant_Name()
+                new_overall_color = curr_job.get_Overall_Color()
+                new_machine_assignment = curr_job.get_Machine_Assignment()
+                new_start = curr_job.get_Start()
+                new_end = curr_job.get_End()
+                new_finished = curr_job.get_Finished()
+
+                new_job.set_Job_Num(new_job_num)
+                new_job.set_Qty(new_qty)
+                new_job.set_ProductionHours(new_prod_hrs)
+                new_job.set_Deadline(new_deadline)
+                new_job.set_Status(new_status)
+                new_job.set_PO_Num(new_po_num)
+                new_job.set_SO_Num(new_so_num)
+                new_job.set_PO_Price(new_po_price)
+                new_job.set_Frame(new_frame)
+                new_job.set_Lbs(new_lbs)
+                new_job.set_Material_ID(new_material_id)
+                new_job.set_Material_Name(new_material_name)
+                new_job.set_Cost_Per_Pound(new_cost_per_lb)
+                new_job.set_Colorant_ID(new_colorant_id)
+                new_job.set_Colorant_Name(new_colorant_name)
+                new_job.set_Overall_Color(new_overall_color)
+                new_job.set_Machine_Assignment(new_machine_assignment)
+                new_job.set_Start(new_start)
+                new_job.set_End(new_end)
+                new_job.set_Finished(new_finished)
+
+                machines_os.assign_job(m, new_job)
+                
+        return machines_os
+    # need to change the 25 hr thing

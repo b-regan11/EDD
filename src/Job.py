@@ -23,6 +23,7 @@ class Job:
         self.Machine_Assignment = None
         self.Start = None
         self.End = None
+        self.Finished = False # This shows whether a job has finished the production hours including changeover, False means the job still has time left to run.
 
     # Getters for each variable
     def get_Job_Num(self):
@@ -84,6 +85,9 @@ class Job:
     
     def get_End(self):
         return self.End
+    
+    def get_Finished(self):
+        return self.Finished
 
     # Setters for each variable
     def set_Job_Num(self, job_num):
@@ -145,3 +149,6 @@ class Job:
 
     def set_End(self, end):
         self.End = end
+
+    def set_Finished(self, finished):
+        self.Finished = finished

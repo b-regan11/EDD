@@ -611,6 +611,23 @@ class UrgencyList:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Overall_Color(overall_color)
     
+    def set_job_finished(self, list_num, job_index, finished):
+        if list_num == 0:
+            if job_index in self.UL_Attainable:
+                self.UL_Attainable[job_index].set_Finished(finished)
+        elif list_num == 1:
+            if job_index in self.UL_Overdue_Attainable:
+                self.UL_Overdue_Attainable[job_index].set_Finished(finished)
+        elif list_num == 2:
+            if job_index in self.UL_Unattainable:
+                self.UL_Unattainable[job_index].set_Finished(finished)
+        elif list_num == 3:
+            if job_index in self.UL_Overdue_Unattainable:
+                self.UL_Overdue_Unattainable[job_index].set_Finished(finished)
+        elif list_num == 4:
+            if job_index in self.UL_Other:
+                self.UL_Other[job_index].set_Finished(finished)
+    
     # getter methd for total job count in an urgency list
     def get_job_count(self, list_num):
         if list_num == 0:

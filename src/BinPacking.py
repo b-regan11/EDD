@@ -310,6 +310,194 @@ class BinPacking:
                         urgency_list.set_job_start(UL, j, changeover_start)
                         urgency_list.set_job_end(UL, j, changeover_end)
                         urgency_list.set_job_machine_assignment(UL, j, current_machine)
+                        urgency_list.set_job_finished(UL, j, False)
+                        if pd.isna(urgency_list.get_job_colorant_id(UL, j)):
+                            if "light gray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "light grey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "lightgray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "lightgrey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "soft gray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "soft grey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "softgray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "softgrey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "light blue" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightblue")
+                            elif "lightblue" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightblue")
+                            elif "sky blue" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "skyblue" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "weathered bronze" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbronze")
+                            elif "weatheredbronze" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbronze")
+                            elif "light coral" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "lightcoral" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "dark gray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "dark grey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "darkgray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "darkgrey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "weathered brown" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbrown")
+                            elif "weatheredbrown" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbrown")
+                            elif "clear" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "clear")
+                            elif "natural" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "natural")
+                            elif "white" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "white")
+                            elif "gray" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "gray")
+                            elif "grey" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "grey")
+                            elif "silver" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "silver")
+                            elif "aqua" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "aqua")
+                            elif "blue" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "blue")
+                            elif "teal" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "teal")
+                            elif "green" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "green")
+                            elif "purple" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "purple")
+                            elif "violet" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "violet")
+                            elif "red" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "red")
+                            elif "magenta" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "magenta")
+                            elif "pink" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "pink")
+                            elif "orange" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "orange")
+                            elif "tangerine" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "tangerine")
+                            elif "yellow" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "yellow")
+                            elif "tan" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "tan")
+                            elif "biege" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "biege")
+                            elif "brown" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "brown")
+                            elif "smoke" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "smoke")
+                            elif "black" in urgency_list.get_job_material_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "black")
+                            else:
+                                urgency_list.set_job_overall_color(UL, j, "unknown")
+                        else:
+                            if "light gray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "light grey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "lightgray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "lightgrey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightgrey")
+                            elif "soft gray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "soft grey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "softgray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "softgrey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "softgrey")
+                            elif "light blue" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightblue")
+                            elif "lightblue" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "lightblue")
+                            elif "sky blue" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "skyblue" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "weathered bronze" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbronze")
+                            elif "weatheredbronze" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbronze")
+                            elif "light coral" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "lightcoral" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "skyblue")
+                            elif "dark gray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "dark grey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "darkgray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "darkgrey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "darkgrey")
+                            elif "weathered brown" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbrown")
+                            elif "weatheredbrown" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "weatheredbrown")
+                            elif "clear" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "clear")
+                            elif "natural" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "natural")
+                            elif "white" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "white")
+                            elif "gray" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "gray")
+                            elif "grey" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "grey")
+                            elif "silver" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "silver")
+                            elif "aqua" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "aqua")
+                            elif "blue" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "blue")
+                            elif "teal" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "teal")
+                            elif "green" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "green")
+                            elif "purple" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "purple")
+                            elif "violet" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "violet")
+                            elif "red" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "red")
+                            elif "magenta" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "magenta")
+                            elif "pink" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "pink")
+                            elif "orange" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "orange")
+                            elif "tangerine" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "tangerine")
+                            elif "yellow" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "yellow")
+                            elif "tan" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "tan")
+                            elif "biege" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "biege")
+                            elif "brown" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "brown")
+                            elif "smoke" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "smoke")
+                            elif "black" in urgency_list.get_job_colorant_id(UL, j).lower():
+                                urgency_list.set_job_overall_color(UL, j, "black")
+                            else:
+                                urgency_list.set_job_overall_color(UL, j, "unknown")
+
                         machines.assign_job(current_machine, urgency_list.get_job(UL, j))
                         break
 
@@ -624,8 +812,9 @@ class BinPacking:
                     # Need to add this to every point that uses assign_job
                     # add job to the machine job list
                     
-                    if pd.isna(urgency_list.get_job_colorant_id(UL, j)):
-                        # urgency_list.set_job_overall_color(UL, j, urgency_list.get_job_material_id(UL, j))
+                    if (pd.isna(urgency_list.get_job_material_id(UL, j))) and (pd.isna(urgency_list.get_job_colorant_id(UL, j))):
+                        urgency_list.set_job_overall_color(UL, j, "unknown")
+                    elif pd.isna(urgency_list.get_job_colorant_id(UL, j)):
                         if "light gray" in urgency_list.get_job_material_id(UL, j).lower():
                             urgency_list.set_job_overall_color(UL, j, "lightgrey")
                         elif "light grey" in urgency_list.get_job_material_id(UL, j).lower():
@@ -719,10 +908,6 @@ class BinPacking:
                         else:
                             urgency_list.set_job_overall_color(UL, j, "unknown")
                     else:
-                        # urgency_list.set_job_overall_color(UL, j, urgency_list.get_job_colorant_id(UL, j))
-                        # if "black" in urgency_list.get_job_colorant_id(UL, j).lower():
-                        #     urgency_list.set_job_overall_color(UL, j, "black")
-                        #-------
                         if "light gray" in urgency_list.get_job_colorant_id(UL, j).lower():
                             urgency_list.set_job_overall_color(UL, j, "lightgrey")
                         elif "light grey" in urgency_list.get_job_colorant_id(UL, j).lower():
@@ -818,6 +1003,7 @@ class BinPacking:
                     # print("JobNum -> ", urgency_list.get_job_num(UL, j), " | Overall Color -> ", urgency_list.get_job_overall_color(UL, j))
                     # This should be reformatted in order to make it easier for the user to add colors
                     
+                    urgency_list.set_job_finished(UL, j, True)
                     machines.assign_job(current_machine, urgency_list.get_job(UL, j))
                 
         print("\nBin Packing Finished\n")

@@ -12,12 +12,12 @@ from PIL import ImageTk, Image
 # ------------- This section will be resolved to a separate method w/ user input later on
 # Define the data
 mach2_day_times = [
-    # Week4
+    # # Week4
     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
     # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
-    # Week3
+    # # Week3
     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
@@ -30,13 +30,13 @@ mach2_day_times = [
     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach5_day_times = [
-    # Week4
+    # # Week4
     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
     # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
     # (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
-    # Week3
+    # # Week3
     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
@@ -49,11 +49,11 @@ mach5_day_times = [
     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach6_day_times = [
-    # Week4
+    # # Week4
     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
-    # Week3
+    # # Week3
     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
@@ -66,9 +66,9 @@ mach6_day_times = [
     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
 ]
 mach9_day_times = [
-    # Week4
+    # # Week4
     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
-    # Week3
+    # # Week3
     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 10, 30, 0)),
     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
@@ -123,31 +123,46 @@ def MainMenu():
         global sorted_data
         print("Running BinPacking Method")
         if sorted_data is not None:
-            machines = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
-            print("jobs on machine 2: ", machines.get_assigned_job_nums(1))
-            print("jobs on machine 5: ", machines.get_assigned_job_nums(2))
-            print("jobs on machine 6: ", machines.get_assigned_job_nums(3))
-            print("jobs on machine 9: ", machines.get_assigned_job_nums(4))
+            machines_orig = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
+            # print("jobs on machine 2: ", machines_orig.get_assigned_job_nums(1))
+            # print("jobs on machine 5: ", machines_orig.get_assigned_job_nums(2))
+            # print("jobs on machine 6: ", machines_orig.get_assigned_job_nums(3))
+            # print("jobs on machine 9: ", machines_orig.get_assigned_job_nums(4))
 
-            for m in range (1, 5):
-                machine_jobs = machines.get_assigned_job_nums(m)
-                if m == 1:
-                    print("\nMachine 2\n")
-                elif m == 2:
-                    print("\nMachine 5\n")
-                elif m == 3:
-                    print("\nMachine 6\n")
-                elif m == 4:
-                    print("\nMachine 9\n")
-                for j in range(len(machine_jobs)):
-                    jobObj = machines.jobs_assigned[m]
-                    print("Job: ", machine_jobs[j], " | StartTime -> ", machines.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines.get_assigned_job_end(m, jobObj[j]))
+            # for m in range (1, 5):
+            #     machine_jobs = machines_orig.get_assigned_job_nums(m)
+            #     if m == 1:
+            #         print("\nMachine 2\n")
+            #     elif m == 2:
+            #         print("\nMachine 5\n")
+            #     elif m == 3:
+            #         print("\nMachine 6\n")
+            #     elif m == 4:
+            #         print("\nMachine 9\n")
+            #     for j in range(len(machine_jobs)):
+            #         jobObj = machines_orig.jobs_assigned[m]
+            #         print("Job: ", machine_jobs[j], " | StartTime -> ", machines_orig.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_orig.get_assigned_job_end(m, jobObj[j]))
             # exit(0)
-            FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines)
+            FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines_orig)
             Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
-            mach_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
+            machines_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
+            # for m in range (1, 5):
+            #     machine_jobs = machines_alt.get_assigned_job_nums(m)
+            #     if m == 1:
+            #         print("\nMachine 2\n")
+            #     elif m == 2:
+            #         print("\nMachine 5\n")
+            #     elif m == 3:
+            #         print("\nMachine 6\n")
+            #     elif m == 4:
+            #         print("\nMachine 9\n")
+            #     for j in range(len(machine_jobs)):
+            #         jobObj = machines_alt.jobs_assigned[m]
+            #         print("Job: ", machine_jobs[j], " | StartTime -> ", machines_alt.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_alt.get_assigned_job_end(m, jobObj[j]))
+            machines_os = SimilaritySwap.comparison(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, machines_orig, machines_alt, latest_end)
+            print("---------- FINAL SOLUTION --------------")
             for m in range (1, 5):
-                machine_jobs = mach_alt.get_assigned_job_nums(m)
+                machine_jobs = machines_os.get_assigned_job_nums(m)
                 if m == 1:
                     print("\nMachine 2\n")
                 elif m == 2:
@@ -157,9 +172,8 @@ def MainMenu():
                 elif m == 4:
                     print("\nMachine 9\n")
                 for j in range(len(machine_jobs)):
-                    jobObj = mach_alt.jobs_assigned[m]
-                    print("Job: ", machine_jobs[j], " | StartTime -> ", mach_alt.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", mach_alt.get_assigned_job_end(m, jobObj[j]))
-
+                    jobObj = machines_os.jobs_assigned[m]
+                    print("Job: ", machine_jobs[j], " | StartTime -> ", machines_os.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_os.get_assigned_job_end(m, jobObj[j]))
 
         else:
             print("No sorted data returned. Exiting.")
