@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import os
 import pandas as pd
 from UrgencyList import UrgencyList
+from Timeslot import Slot
 from Machines import Machines
 from Changeover import Changeover
 from BinPacking import BinPacking
@@ -260,8 +261,6 @@ class SimilaritySwap:
         mach6curr_start = None
         mach9curr_start = None
 
-        # current_machine = 1 # default 
-
         machine_start_times = []
 
         for m in range(1, 5):
@@ -375,19 +374,20 @@ class SimilaritySwap:
                     changeover.set_start(changeover_start)
                     changeover.set_end(changeover_end)
                     changeover.set_jobB_num(job_obj)
+                    changeover.set_Job(job_obj)
 
                     if m == 1:
                         machines_alt.set_availability(m, mach2_curr_slot, True)
-                        machines_alt.set_assignment(m, mach2_curr_slot, job_obj)
+                        machines_alt.set_assignment(m, mach2_curr_slot, changeover)
                     elif m == 2:
                         machines_alt.set_availability(m, mach5_curr_slot, True)
-                        machines_alt.set_assignment(m, mach5_curr_slot, job_obj)
+                        machines_alt.set_assignment(m, mach5_curr_slot, changeover)
                     elif m == 3:
                         machines_alt.set_availability(m, mach6_curr_slot, True)
-                        machines_alt.set_assignment(m, mach6_curr_slot, job_obj)
+                        machines_alt.set_assignment(m, mach6_curr_slot, changeover)
                     elif m == 4:
                         machines_alt.set_availability(m, mach9_curr_slot, True)
-                        machines_alt.set_assignment(m, mach9_curr_slot, job_obj)
+                        machines_alt.set_assignment(m, mach9_curr_slot, changeover)
 
                     if machines_alt.get_last_timeslot(m) == changeover.End:
                         if m == 1:
@@ -412,6 +412,7 @@ class SimilaritySwap:
                         job_obj.set_Start(changeover_start)
                         job_obj.set_End(changeover_end)
                         job_obj.set_Machine_Assignment(m)
+                        job_obj.set_Finished(False)
                         machines_alt.assign_job(m, job_obj)
                         break
 
@@ -572,8 +573,10 @@ class SimilaritySwap:
             # choose solution 0 if there are less late jobs, otherwise, choose solution 1
             if solution0_late < solution1_late:
                 os_jobs = machines_orig.get_assigned_jobs(m)
+                os_slots = machines_orig.get_timeslots_for_machine(m)
             elif solution0_late >= solution1_late:
                 os_jobs = machines_alt.get_assigned_jobs(m)
+                os_slots = machines_alt.get_timeslots_for_machine(m)
             
             for j in range(len(os_jobs)):
                 curr_job = os_jobs[j]
@@ -622,6 +625,29 @@ class SimilaritySwap:
                 new_job.set_Finished(new_finished)
 
                 machines_os.assign_job(m, new_job)
+
+            for s in range(len(os_slots)):
+                curr_slot = os_slots[s]
+                new_slot = Slot()
+
+                new_slot_start = curr_slot.get_start()
+                new_slot_end = curr_slot.get_end()
+                new_slot_availability = curr_slot.get_availability()
+                new_slot_assignment = curr_slot.get_assignment()
+
+                new_slot.set_start(new_slot_start)
+                new_slot.set_end(new_slot_end)
+                new_slot.set_availability(new_slot_availability)
+                new_slot.set_assignment(new_slot_assignment)
+
+                if m == 1:
+                    machines_os.mach2_slot[s] = new_slot
+                elif m == 2:
+                    machines_os.mach5_slot[s] = new_slot
+                elif m == 3:
+                    machines_os.mach6_slot[s] = new_slot
+                elif m == 4:
+                    machines_os.mach9_slot[s] = new_slot
                 
         return machines_os
     # need to change the 25 hr thing

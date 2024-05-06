@@ -222,50 +222,51 @@ class BinPacking:
                     changeover.set_start(changeover_start)
                     changeover.set_end(changeover_end)
                     changeover.set_jobB_num(urgency_list.get_job(UL, j))
+                    changeover.set_Job(urgency_list.get_job(UL, j))
                     # print("Changeover Start: ", changeover.Start)
                     # print("Changeover End: ", changeover.End) 
-                
+
                     if first_mach == "MA1":
                         if MA1 == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach2_curr_slot, changeover)
                         elif MA1 == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
                         elif MA1 == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
                         elif MA1 == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
                     
                     elif first_mach == "MA2":
                         if MA2 == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach2_curr_slot, changeover)
                         elif MA2 == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
                         elif MA2 == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
                         elif MA2 == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
 
                     elif first_mach == "MB":
                         if MB == 1:
                             machines.set_availability(current_machine, mach2_curr_slot, True)
-                            machines.set_assignment(current_machine, mach2_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach2_curr_slot, changeover)
                         elif MB == 2:
                             machines.set_availability(current_machine, mach5_curr_slot, True)
-                            machines.set_assignment(current_machine, mach5_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach5_curr_slot, changeover)
                         elif MB == 3:
                             machines.set_availability(current_machine, mach6_curr_slot, True)
-                            machines.set_assignment(current_machine, mach6_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach6_curr_slot, changeover)
                         elif MB == 4:
                             machines.set_availability(current_machine, mach9_curr_slot, True)
-                            machines.set_assignment(current_machine, mach9_curr_slot, urgency_list.get_job(UL, j))
+                            machines.set_assignment(current_machine, mach9_curr_slot, changeover)
                     
                     if machines.get_last_timeslot(current_machine) == changeover.End:
                         if current_machine == 1:
@@ -498,7 +499,8 @@ class BinPacking:
                             else:
                                 urgency_list.set_job_overall_color(UL, j, "unknown")
 
-                        machines.assign_job(current_machine, urgency_list.get_job(UL, j))
+                        # machines.assign_job(current_machine, urgency_list.get_job(UL, j))
+                        machines.assign_job(current_machine, changeover)
                         break
 
                     if first_mach == "MA1":

@@ -5,6 +5,9 @@ class Changeover:
         self.Name = "Changeover"
         self.Start = None
         self.End = None
+        self.Job = None
+        self.Job_Num = None
+
         self.JobA_Num = None  # Job object being changed from
         self.JobB_Num = None  # Job object being changed into
 
@@ -37,3 +40,30 @@ class Changeover:
 
     def set_jobB_num(self, jobB_num):
         self.JobB_Num = jobB_num
+
+
+
+
+    def set_Job(self, job_obj):
+        self.Job = job_obj
+
+    def set_Job_Num(self):
+        job = self.Job
+        job_num = job.get_Job_Num()
+        self.Job_Num = job_num + " (Changeover)"
+
+    def get_Job(self):
+        return self.Job
+    
+    def get_Job_Num(self):
+        return self.Job_Num
+    
+    def get_Job_Start(self):
+        job = self.Job
+        job_start = job.get_Job_Start()
+        return job_start
+
+    def get_Job_End(self):
+        job = self.Job
+        job_end = job.get_Job_End()
+        return job_end

@@ -1,6 +1,9 @@
+import pandas as pd
 from datetime import datetime, timedelta
 from Timeslot import Slot
 from Frames import Frame
+from Job import Job
+from Changeover import Changeover
 
 class Machines:
     def __init__(self):
@@ -264,8 +267,44 @@ class Machines:
         job_color = job.get_Overall_Color()
         return job_color
 
+    # Method to generate a table of timeslots for a given machine number
+    def generate_timeslot_table_for_machine(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
 
+        machine_slots = self.get_machine(machine_number)
 
+        # Initialize lists to store start time and job number for each timeslot
+        start_times = []
+        job_nums = []
 
+        for slot_index, slot in machine_slots.items():
+            start_times.append(slot.get_start())
 
+            # Check if the assignment is changeover or a job
+            assignment = slot.get_assignment()
+            if isinstance(assignment, Job):
+                job_nums.append(assignment.get_Job_Num())
+            elif isinstance(assignment, Changeover):
+                assignment.set_Job_Num()
+                job_nums.append(assignment.get_Job_Num())
+
+        # Create DataFrame from lists
+        timeslot_table = pd.DataFrame({
+            'Start Time': start_times,
+            'Job Number': job_nums
+        })
+
+        return timeslot_table
     
+    # Method to get all timeslot objects for a given machine number
+    def get_timeslots_for_machine(self, machine_number):
+        if machine_number not in [1, 2, 3, 4]:
+            raise ValueError("Invalid machine number")
+
+        machine_slots = self.get_machine(machine_number)
+
+        # Convert dictionary values to list of timeslot objects
+        timeslots = list(machine_slots.values())
+
+        return timeslots

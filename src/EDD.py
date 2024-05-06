@@ -8,6 +8,7 @@ from SimilaritySwap import SimilaritySwap
 import tkinter as tk
 import tkinter.messagebox as messagebox
 from PIL import ImageTk, Image
+import Output
 
 # # TO DO
 # # revise comments
@@ -15,84 +16,84 @@ from PIL import ImageTk, Image
 # # need to create a method which takes an earliest start and latest end and calculates the operating hours for each machine
 # # there will be a default setting for what times each machine is running on each day of the week.
 
-# # Define the data
-# mach2_day_times = [
+# Define the data
+mach2_day_times = [
 #     # # Week4
 #     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
 #     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
 #     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
 #     # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
-#     # # Week3
-#     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-#     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-#     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-#     # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-#     # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-#     # Week2
-#     (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-#     (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-#     (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-#     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-# ]
-# mach5_day_times = [
+    # # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
+]
+mach5_day_times = [
 #     # # Week4
 #     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
 #     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
 #     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
 #     # (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
 #     # (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
-#     # # Week3
-#     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-#     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-#     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-#     # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-#     # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-#     # Week2
-#     (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-#     (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-#     (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-#     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-# ]
-# mach6_day_times = [
+    # # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
+]
+mach6_day_times = [
 #     # # Week4
 #     # (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
 #     # (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
 #     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
-#     # # Week3
-#     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-#     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-#     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-#     # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-#     # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-#     # Week2
-#     (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-#     (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-#     (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-#     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-# ]
-# mach9_day_times = [
+    # # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
+]
+mach9_day_times = [
 #     # # Week4
 #     # (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
-#     # # Week3
-#     # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-#     # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 10, 30, 0)),
-#     # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-#     # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-#     # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-#     # Week2
-#     (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 16, 0, 0)),
-#     (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-#     (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-#     (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-# ]
-# # Combine all day times into one list
-# all_day_times = mach2_day_times + mach5_day_times + mach6_day_times + mach9_day_times
-# # Find the earliest start and latest end
-# earliest_start = min(start for start, _ in all_day_times)
-# latest_end = max(end for _, end in all_day_times)
+    # # Week3
+    # (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
+    # (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 10, 30, 0)),
+    # (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
+    # (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
+    # (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
+    # Week2
+    (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 16, 0, 0)),
+    (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
+    (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
+    (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
+]
+# Combine all day times into one list
+all_day_times = mach2_day_times + mach5_day_times + mach6_day_times + mach9_day_times
+# Find the earliest start and latest end
+earliest_start = min(start for start, _ in all_day_times)
+latest_end = max(end for _, end in all_day_times)
 
-# # print("Start: ", earliest_start)
-# # print("End: ", latest_end)
+# print("Start: ", earliest_start)
+# print("End: ", latest_end)
 
 sorted_data = None
 
@@ -160,13 +161,9 @@ def MainMenu():
         print("Running BinPacking Method")
         if sorted_data is not None:
             machines_orig = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
-            FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines_orig)
-            Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
-            machines_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
-            machines_os = SimilaritySwap.comparison(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, machines_orig, machines_alt, latest_end)
-            print("---------- FINAL SOLUTION --------------")
+            print("---------- SOLUTION-0 --------------")
             for m in range (1, 5):
-                machine_jobs = machines_os.get_assigned_job_nums(m)
+                machine_jobs = machines_orig.get_assigned_job_nums(m)
                 if m == 1:
                     print("\nMachine 2\n")
                 elif m == 2:
@@ -176,8 +173,65 @@ def MainMenu():
                 elif m == 4:
                     print("\nMachine 9\n")
                 for j in range(len(machine_jobs)):
+                    jobObj = machines_orig.jobs_assigned[m]
+                    print("Job: ", machine_jobs[j], " | StartTime -> ", machines_orig.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_orig.get_assigned_job_end(m, jobObj[j]))
+            FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines_orig)
+            Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
+            machines_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
+            print("---------- SOLUTION-1 --------------")
+            for m in range (1, 5):
+                machine_jobs = machines_alt.get_assigned_job_nums(m)
+                if m == 1:
+                    print("\nMachine 2\n")
+                    mach2_timeslot_table = machines_alt.generate_timeslot_table_for_machine(m)
+                    print(mach2_timeslot_table)
+                elif m == 2:
+                    print("\nMachine 5\n")
+                    mach5_timeslot_table = machines_alt.generate_timeslot_table_for_machine(m)
+                    print(mach5_timeslot_table)
+                elif m == 3:
+                    print("\nMachine 6\n")
+                    mach6_timeslot_table = machines_alt.generate_timeslot_table_for_machine(m)
+                    print(mach6_timeslot_table)
+                elif m == 4:
+                    print("\nMachine 9\n")
+                    mach9_timeslot_table = machines_alt.generate_timeslot_table_for_machine(m)
+                    print(mach9_timeslot_table)
+                for j in range(len(machine_jobs)):
+                    jobObj = machines_alt.jobs_assigned[m]
+                    print("Job: ", machine_jobs[j], " | StartTime -> ", machines_alt.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_alt.get_assigned_job_end(m, jobObj[j]))
+            machines_os = SimilaritySwap.comparison(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, machines_orig, machines_alt, latest_end)
+            print("---------- FINAL SOLUTION --------------")
+            for m in range (1, 5):
+                machine_jobs = machines_os.get_assigned_job_nums(m)
+                if m == 1:
+                    print("\nMachine 2\n")
+                    mach2_timeslot_table = machines_os.generate_timeslot_table_for_machine(m)
+                    print(mach2_timeslot_table)
+                elif m == 2:
+                    print("\nMachine 5\n")
+                    mach5_timeslot_table = machines_os.generate_timeslot_table_for_machine(m)
+                    print(mach5_timeslot_table)
+                elif m == 3:
+                    print("\nMachine 6\n")
+                    mach6_timeslot_table = machines_os.generate_timeslot_table_for_machine(m)
+                    print(mach6_timeslot_table)
+                elif m == 4:
+                    print("\nMachine 9\n")
+                    mach9_timeslot_table = machines_os.generate_timeslot_table_for_machine(m)
+                    print(mach9_timeslot_table)
+                for j in range(len(machine_jobs)):
                     jobObj = machines_os.jobs_assigned[m]
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines_os.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_os.get_assigned_job_end(m, jobObj[j]))
+            
+            # Format the datetime object as per your requirement
+            fileroot = "MachineSchedule_"
+            formatted_date = earliest_start.strftime("%Y_%B_%d")
+
+            # filename = "sample_table.xlsx"
+            filename = fileroot + formatted_date + ".xlsx"
+            Output.create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table)
+            Output.modify_workbook(filename)
 
         else:
             print("No sorted data returned. Exiting.")
