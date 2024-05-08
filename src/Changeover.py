@@ -14,11 +14,89 @@ class Changeover:
     def get_name(self):
         return self.Name
     
-    def get_start(self):
+    def get_Start(self):
         return self.Start
     
-    def get_end(self):
+    def get_End(self):
         return self.End
+    
+    def get_Frame(self):
+        job = self.get_Job()
+        return job.get_Frame()
+    
+    def get_Overall_Color(self):
+        job = self.get_Job()
+        return job.get_Overall_Color()
+    
+    def get_Qty(self):
+        job = self.get_Job()
+        return job.get_Qty()
+    
+    def get_ProductionHours(self):
+        job = self.get_Job()
+        return job.get_ProductionHours()
+    
+    def get_Deadline(self):
+        job = self.get_Job()
+        return job.get_Deadline()
+    
+    def get_Status(self):
+        job = self.get_Job()
+        return job.get_Status()
+    
+    def get_PO_Num(self):
+        job = self.get_Job()
+        return job.get_PO_Num()
+    
+    def get_SO_Num(self):
+        job = self.get_Job()
+        return job.get_SO_Num()
+    
+    def get_PO_Price(self):
+        job = self.get_Job()
+        return job.get_PO_Price()
+    
+    def get_Frame(self):
+        job = self.get_Job()
+        return job.get_Frame()
+    
+    def get_Lbs(self):
+        job = self.get_Job()
+        return job.get_Lbs()
+    
+    def get_Material_ID(self):
+        job = self.get_Job()
+        return job.get_Material_ID()
+    
+    def get_Material_Name(self):
+        job = self.get_Job()
+        return job.get_Material_Name()
+    
+    def get_Cost_Per_Pound(self):
+        job = self.get_Job()
+        return job.get_Cost_Per_Pound()
+    
+    def get_Colorant_ID(self):
+        job = self.get_Job()
+        return job.get_Colorant_ID()
+    
+    def get_Colorant_Name(self):
+        job = self.get_Job()
+        return job.get_Colorant_Name()
+    
+    def get_Overall_Color(self):
+        job = self.get_Job()
+        return job.get_Overall_Color()
+    
+    def get_Machine_Assignment(self):
+        job = self.get_Job()
+        return job.get_Machine_Assignment()
+    
+    def get_Finished(self):
+        job = self.get_Job()
+        return job.get_Finished()
+    
+
 
     def get_jobA_num(self):
         return self.JobA_Num
@@ -43,14 +121,16 @@ class Changeover:
 
 
 
-
     def set_Job(self, job_obj):
         self.Job = job_obj
 
     def set_Job_Num(self):
         job = self.Job
         job_num = job.get_Job_Num()
-        self.Job_Num = job_num + " (Changeover)"
+        if job_num.endswith(" (Changeover)"):
+            self.Job_Num = job_num
+        else:    
+            self.Job_Num = job_num + " (Changeover)" 
 
     def get_Job(self):
         return self.Job

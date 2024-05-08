@@ -375,6 +375,7 @@ class SimilaritySwap:
                     changeover.set_end(changeover_end)
                     changeover.set_jobB_num(job_obj)
                     changeover.set_Job(job_obj)
+                    changeover.set_Job_Num()
 
                     if m == 1:
                         machines_alt.set_availability(m, mach2_curr_slot, True)

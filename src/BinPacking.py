@@ -223,6 +223,7 @@ class BinPacking:
                     changeover.set_end(changeover_end)
                     changeover.set_jobB_num(urgency_list.get_job(UL, j))
                     changeover.set_Job(urgency_list.get_job(UL, j))
+                    changeover.set_Job_Num()
                     # print("Changeover Start: ", changeover.Start)
                     # print("Changeover End: ", changeover.End) 
 
