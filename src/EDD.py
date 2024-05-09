@@ -1,3 +1,5 @@
+import os
+
 from datetime import datetime, timedelta
 import os
 import pandas as pd
@@ -7,116 +9,18 @@ from Machines import Machines
 from SimilaritySwap import SimilaritySwap
 import tkinter as tk
 import tkinter.messagebox as messagebox
+from tkcalendar import DateEntry
 from PIL import ImageTk, Image
 import Output
 
-# Define the data
-week = 2
-if week == 2:
-    mach2_day_times = [
-        # Week2
-        (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-        (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-        (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-        (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-    ]
-    mach5_day_times = [
-        # Week2
-        (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-        (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-        (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-        (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-    ]
-    mach6_day_times = [
-        # Week2
-        (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 18, 30, 0)),
-        (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-        (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-        (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-    ]
-    mach9_day_times = [
-        # Week2
-        (datetime(2023, 4, 3, 6, 0, 0), datetime(2023, 4, 3, 16, 0, 0)),
-        (datetime(2023, 4, 4, 6, 0, 0), datetime(2023, 4, 4, 18, 30, 0)),
-        (datetime(2023, 4, 5, 6, 0, 0), datetime(2023, 4, 5, 18, 30, 0)),
-        (datetime(2023, 4, 6, 6, 0, 0), datetime(2023, 4, 6, 18, 30, 0))
-    ]
-
-    
-elif week == 3:
-    mach2_day_times = [
-        # Week3
-        (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-        (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-        (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-        (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-        (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-    ]
-    mach5_day_times = [
-        # Week3
-        (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-        (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-        (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-        (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-        (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-    ]
-    mach6_day_times = [
-        # Week3
-        (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-        (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 18, 30, 0)),
-        (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-        (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-        (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-    ]
-    mach9_day_times = [
-        # Week3
-        (datetime(2023, 4, 10, 6, 0, 0), datetime(2023, 4, 10, 18, 30, 0)),
-        (datetime(2023, 4, 11, 6, 0, 0), datetime(2023, 4, 11, 10, 30, 0)),
-        (datetime(2023, 4, 12, 6, 0, 0), datetime(2023, 4, 12, 18, 30, 0)),
-        (datetime(2023, 4, 13, 6, 0, 0), datetime(2023, 4, 13, 18, 30, 0)),
-        (datetime(2023, 4, 14, 6, 0, 0), datetime(2023, 4, 14, 18, 30, 0))
-    ]
-
-elif week == 4:
-    mach2_day_times = [
-        # Week4
-        (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-        (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 13, 00, 0)),
-        (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 15, 00, 0)),
-        (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 13, 30, 0))
-    ]
-    mach5_day_times = [
-        # Week4
-        (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-        (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
-        (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0)),
-        (datetime(2023, 4, 27, 6, 0, 0), datetime(2023, 4, 27, 18, 30, 0)),
-        (datetime(2023, 4, 28, 6, 0, 0), datetime(2023, 4, 28, 18, 30, 0))
-    ]
-    mach6_day_times = [
-        # Week4
-        (datetime(2023, 4, 24, 6, 0, 0), datetime(2023, 4, 24, 18, 30, 0)),
-        (datetime(2023, 4, 25, 6, 0, 0), datetime(2023, 4, 25, 18, 30, 0)),
-        (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 18, 30, 0))
-    ]
-    mach9_day_times = [
-        # Week4
-        (datetime(2023, 4, 26, 6, 0, 0), datetime(2023, 4, 26, 10, 30, 0))
-    ]
-
-# Combine all day times into one list
-all_day_times = mach2_day_times + mach5_day_times + mach6_day_times + mach9_day_times
-# Find the earliest start and latest end
-earliest_start = min(start for start, _ in all_day_times)
-latest_end = max(end for _, end in all_day_times)
-
-# print("Start: ", earliest_start)
-# print("End: ", latest_end)
-
 sorted_data = None
+mach2_day_time = []
+mach5_day_times = []
+mach6_day_times = []
+mach9_day_times = []
+earliest_start = None
+latest_end = None
 
-#---------------------- End of Section --------------------
-# method to test if GUI window is open, quit if not open
 def check_window_status(window):
     def on_closing():
         print("Window is closed.")
@@ -127,36 +31,6 @@ def check_window_status(window):
 def MainMenu():
     def show_message_box(title, message):
         messagebox.showinfo(title, message)
-    
-    def create_time_intervals(earliest_start, latest_end):
-        # Define the list of weekdays
-        weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        
-        # Initialize the list to store time intervals
-        time_intervals = []
-
-        # Iterate over the days between earliest_start and latest_end
-        current_date = earliest_start
-        while current_date <= latest_end:
-            # Get the day of the week for the current date
-            day_of_week = weekdays[current_date.weekday()]
-            
-            # Skip Saturdays and Sundays
-            if day_of_week in ['Saturday', 'Sunday']:
-                current_date += timedelta(days=1)
-                continue
-
-            # Determine the start and end times based on the day of the week
-            start_time = datetime(current_date.year, current_date.month, current_date.day, 6, 0, 0)
-            end_time = datetime(current_date.year, current_date.month, current_date.day, 2, 0, 0) + timedelta(days=1)
-            
-            # Append the time interval to the list
-            time_intervals.append((start_time, end_time))
-            
-            # Move to the next day
-            current_date += timedelta(days=1)
-        
-        return time_intervals
 
     def click_file_selection_button():
         global sorted_data
@@ -266,7 +140,7 @@ def MainMenu():
     # disable window resizing
     root.resizable(False, False)
 
-    image = Image.open("Resources/WepcoLogo.png")
+    image = Image.open("Resources/WepcoLogo2.png")
     photo = ImageTk.PhotoImage(image)
 
     # set window dimensions
@@ -282,13 +156,37 @@ def MainMenu():
     image_label.grid(row=0, column=0, padx=5, pady=5)
     image_label.configure(bg="white")
 
+    # Container frame to page components
+    date_container = tk.Frame(frame, bg="white")
+    date_container.grid(row=1, column=0, padx=10, pady=10)
+
+    # start date label
+    start_label = tk.Label(date_container, text="Start Date: ", bg="white")
+    start_label.grid(row=0, column=0, padx=30, pady=10)
+
+    # DateEntry widget for start date
+    start_date_entry = DateEntry(date_container, background='skyblue', foreground='black', borderwidth=2)
+    start_date_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    # command button to confirm dates
+    confirmDatesButton = tk.Button(date_container, text="Confirm Dates", width=10, height=2, command=lambda: date_confirmation(start_date_entry, end_date_entry))
+    confirmDatesButton.grid(row=0, column=2, padx=10, pady=10)
+
+    # end date label
+    end_label = tk.Label(date_container, text="End Date", bg="white")
+    end_label.grid(row=1, column=0, padx=30, pady=5)
+
+    # DateEntry widget for end date
+    end_date_entry = DateEntry(date_container, background='skyblue', foreground='black', borderwidth=2)
+    end_date_entry.grid(row=1, column=1, padx=10, pady=10)
+
     # create the file name label
     file_name_label = tk.Label(frame, text="", bg="white", height=2)
-    file_name_label.grid(row=1, column=0, padx=5, pady=(5,0))
+    file_name_label.grid(row=2, column=0, padx=5, pady=(5,0))
 
     # create the file selection button
-    fileSelectionButton = tk.Button(frame, text="File Selection", width=10, height=2, command=click_file_selection_button)
-    fileSelectionButton.grid(row=2, column=0, padx=5, pady=5)
+    fileSelectionButton = tk.Button(date_container, text="File Selection", width=10, height=2, command=click_file_selection_button)
+    fileSelectionButton.grid(row=1, column=2, padx=5, pady=5)
 
     # create the create schedule button
     createButton = tk.Button(frame, text="Create Schedule", width=10, height=2, command=click_create_schedule_button)
@@ -341,6 +239,57 @@ def run_file_selection():
         return None, None
 
 # create schedule method
+def date_confirmation(start_date_entry, end_date_entry):
+    global mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end
+
+    # Get the selected dates from the DateEntry widgets
+    start_date = start_date_entry.get_date()
+    end_date = end_date_entry.get_date()
+
+    earliest_start = start_date
+    latest_end = end_date
+    
+    # Update the time intervals for each machine
+    mach2_day_times = create_time_intervals(start_date, end_date)
+    mach5_day_times = create_time_intervals(start_date, end_date)
+    mach6_day_times = create_time_intervals(start_date, end_date)
+    mach9_day_times = create_time_intervals(start_date, end_date)
+
+    # Print the selected dates
+    print("Start Date:", start_date)
+    print("End Date:", end_date)
+
+def create_time_intervals(earliest_start, latest_end):
+    # Define the list of weekdays
+    weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    
+    # Initialize the list to store time intervals
+    time_intervals = []
+
+    # Iterate over the days between earliest_start and latest_end
+    current_date = earliest_start
+    while current_date <= latest_end:
+        # Get the day of the week for the current date
+        day_of_week = weekdays[current_date.weekday()]
+        
+        # Skip Fridays, Saturdays and Sundays
+        if day_of_week in ['Friday', 'Saturday', 'Sunday']:
+            current_date += timedelta(days=1)
+            continue
+
+        # Determine the start and end times based on the day of the week
+        start_time = datetime(current_date.year, current_date.month, current_date.day, 6, 0, 0)
+        end_time = datetime(current_date.year, current_date.month, current_date.day, 2, 0, 0) + timedelta(days=1)
+        
+        # Append the time interval to the list
+        time_intervals.append((start_time, end_time))
+        
+        # Move to the next day
+        current_date += timedelta(days=1)
+    
+    return time_intervals
+    
+    
     
 # Main method
 if __name__ == "__main__":

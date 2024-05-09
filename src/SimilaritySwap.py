@@ -518,6 +518,7 @@ class SimilaritySwap:
         return machines_alt
     
     def comparison(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, machines_orig, machines_alt, latest_end_date):
+        latest_end_date = datetime.combine(latest_end_date, datetime.min.time())
         # print("nothing to see here")
         # machines_orig = Machines()
         # machines_alt = Machines()

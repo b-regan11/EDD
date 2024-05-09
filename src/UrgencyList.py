@@ -11,6 +11,10 @@ class UrgencyList:
         self.UL_Other = {}
 
     def create(self, start_date, end_date, sorted_data):
+        # Convert start_date and end_date to datetime objects
+        start_date = datetime.combine(start_date, datetime.min.time())
+        end_date = datetime.combine(end_date, datetime.min.time())
+        
         # Urgency List Data split for Job Priorities
         UrgencyList_Data = sorted_data[(sorted_data['due_date'] >= start_date - timedelta(days=0.5)) & (sorted_data['due_date'] <= end_date + timedelta(days=2))]
         attainable = UrgencyList_Data.query('production_hrs <= 25')  # 1

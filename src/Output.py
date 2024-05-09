@@ -1,3 +1,4 @@
+import os
 from openpyxl.styles import Border, Side
 from openpyxl.styles import PatternFill
 from openpyxl.styles import Border
@@ -57,6 +58,7 @@ def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_tim
 
     # Write to Excel
     print(f"Excel file saved as {filename}")
+    print(f"File path: {os.path.abspath(filename)}")
 
 def modify_workbook(filename):
     # Load the Excel file
@@ -205,94 +207,3 @@ def modify_workbook(filename):
 
     # Save the workbook
     wb.save(filename)
-
-
-
-
-
-# def modify_workbook(filename):
-#     # Load the Excel file
-#     xls = pd.ExcelFile(filename)
-
-#     # Dictionary to store modified DataFrames
-#     modified_dfs = {}
-
-#     # Iterate over each sheet in the Excel file
-#     for sheet_name in xls.sheet_names:
-#         # Read the sheet into a DataFrame
-#         df = pd.read_excel(filename, sheet_name=sheet_name, index_col=0)
-
-#         # Modify the values in the first column
-#         modified_index = []
-#         for index in df.index:
-#             # Convert the time string to datetime object
-#             time_obj = datetime.strptime(str(index), '%H:%M:%S')
-
-#             # Format the first value as '6:00 AM'
-#             first_value = time_obj.strftime('%-I:%M %p')
-
-#             # Calculate the second value as 30 minutes after the first one
-#             second_value = (time_obj + timedelta(minutes=30)).strftime('%-I:%M %p')
-
-#             # Append both values with the desired format
-#             modified_index.append(f"{first_value} - {second_value}")
-
-#         # Assign the modified index to the DataFrame
-#         df.index = modified_index
-
-#         # Modify the column headers (dates)
-#         df.columns = [date.strftime('%a %-m/%-d/%y') for date in df.columns]
-
-#         # Store the modified DataFrame
-#         modified_dfs[sheet_name] = df
-
-#     # Create a new Excel writer object
-#     writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-
-#     # Write each modified DataFrame to the Excel file
-#     for sheet_name, df in modified_dfs.items():
-#         df.to_excel(writer, sheet_name=sheet_name)
-#         worksheet = writer.sheets[sheet_name]
-
-#         # Set the width of the first column to 18
-#         worksheet.set_column('A:A', 18)
-
-#         # Iterate over the columns starting from the second column (B)
-#         for col_num, column in enumerate(df.columns, start=1):
-#             # Check if the first cell in the column is not empty
-#             if not df[column].isnull().all():
-#                 # Set the width of the column to 16
-#                 worksheet.set_column(col_num, col_num, 16)
-
-#         # Set the width of the last column to 16
-#         last_col_index = len(df.columns)
-#         worksheet.set_column(last_col_index, last_col_index, 16)
-
-#         # Add a row with the first cell copied from the cell above
-#         # last_row = len(df)
-#         # for col in range(len(df.columns)):
-#         #     worksheet.write(last_row + 1, col + 1, df.iloc[-1, col])
-#         # worksheet.write(last_row + 1, 0, worksheet.cell(last_row, 0).value)
-
-
-#         # Add a row of 'X's
-#         # worksheet.write_row(last_row, 0, ['X'] * (last_col_index + 1))
-
-
-#     # Close the Excel writer object to save the workbook
-#     writer.close()
-
-# #     # TESTEXCL2 has the correct formatting, it just needs to be converted here so that 
-# #     # it works for each machine
-
-# #     # after that, need to mess with the colors and possibly debug (recommend just a week for this software)
-# #     # make a commit
-# #     # after that, go back and adjust the GUI
-# #     # make a commit
-# #     # then, will need to check how it looks on Windows.
-# #     # make a commit
-# #     # when everything above is done, look into making an Executable
-
-
-# # near line 70:
-# # I was able to insert at the top row, but now I need to redo the formatting portion
