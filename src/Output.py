@@ -56,10 +56,6 @@ def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_tim
     # Close the Excel writer object to save the workbook
     writer.close()
 
-    # Write to Excel
-    print(f"Excel file saved as {filename}")
-    print(f"File path: {os.path.abspath(filename)}")
-
 def modify_workbook(filename):
     # Load the Excel file
     wb = load_workbook(filename)
@@ -205,6 +201,8 @@ def modify_workbook(filename):
                                     top=Side(style='thick'), 
                                     bottom=Side(style='thick'))
                 
+        DummyUsed = False
+
         # Iterate over the rows and columns in the sheet
         for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
             for cell in row:
@@ -212,6 +210,13 @@ def modify_workbook(filename):
                 if cell.value and "dummy" in str(cell.value).lower():
                     # Replace the cell value with "-----"
                     cell.value = "-----"
+                    DummyUsed = True
+        if DummyUsed == True:
+            print("No more jobs were selectable from the input file")
+    
+    # Write to Excel
+    # print(f"Excel file saved as {filename}")
+    print(f"Excel file saved at: {os.path.abspath(filename)}")
 
     # Save the workbook
     wb.save(filename)

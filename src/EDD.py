@@ -46,9 +46,30 @@ def MainMenu():
             # show_message_box("Error", str(e))
             show_message_box("Error", "Please select another file.\nExcel files (.xlsx) only.\nFile must be in correct format.")
             print("Please select an Excel file")
+            file_name_label.config(text="")
+            createButton.config(state=tk.DISABLED)
 
             
-    def click_create_schedule_button():
+    def click_create_schedule_button(start_date_entry, end_date_entry):
+        global mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end
+
+        # Get the selected dates from the DateEntry widgets
+        start_date = start_date_entry.get_date()
+        end_date = end_date_entry.get_date()
+
+        earliest_start = start_date
+        latest_end = end_date
+        
+        # Update the time intervals for each machine
+        mach2_day_times = create_time_intervals(start_date, end_date)
+        mach5_day_times = create_time_intervals(start_date, end_date)
+        mach6_day_times = create_time_intervals(start_date, end_date)
+        mach9_day_times = create_time_intervals(start_date, end_date)
+
+        # Print the selected dates
+        print("Start Date:", start_date)
+        print("End Date:", end_date)
+        
         global sorted_data
         print("Running BinPacking Method")
         if sorted_data is not None:
@@ -127,7 +148,6 @@ def MainMenu():
 
         else:
             print("No sorted data returned. Exiting.")
-    
 
     # sets sorted_data as a global variable
     global sorted_data
@@ -140,7 +160,7 @@ def MainMenu():
     # disable window resizing
     root.resizable(False, False)
 
-    image = Image.open("Resources/WepcoLogo2.png")
+    image = Image.open("Resources/WepcoLogo.png")
     photo = ImageTk.PhotoImage(image)
 
     # set window dimensions
@@ -158,7 +178,7 @@ def MainMenu():
 
     # Container frame to page components
     date_container = tk.Frame(frame, bg="white")
-    date_container.grid(row=1, column=0, padx=10, pady=10)
+    date_container.grid(row=2, column=0, padx=10, pady=10)
 
     # start date label
     start_label = tk.Label(date_container, text="Start Date: ", bg="white")
@@ -167,10 +187,6 @@ def MainMenu():
     # DateEntry widget for start date
     start_date_entry = DateEntry(date_container, background='skyblue', foreground='black', borderwidth=2)
     start_date_entry.grid(row=0, column=1, padx=10, pady=5)
-
-    # command button to confirm dates
-    confirmDatesButton = tk.Button(date_container, text="Confirm Dates", width=10, height=2, command=lambda: date_confirmation(start_date_entry, end_date_entry))
-    confirmDatesButton.grid(row=0, column=2, padx=10, pady=10)
 
     # end date label
     end_label = tk.Label(date_container, text="End Date", bg="white")
@@ -182,15 +198,15 @@ def MainMenu():
 
     # create the file name label
     file_name_label = tk.Label(frame, text="", bg="white", height=2)
-    file_name_label.grid(row=2, column=0, padx=5, pady=(5,0))
+    file_name_label.grid(row=1, column=0, padx=5, pady=0)
 
     # create the file selection button
     fileSelectionButton = tk.Button(date_container, text="File Selection", width=10, height=2, command=click_file_selection_button)
-    fileSelectionButton.grid(row=1, column=2, padx=5, pady=5)
+    fileSelectionButton.grid(row=0, column=2, padx=5, pady=5)
 
     # create the create schedule button
-    createButton = tk.Button(frame, text="Create Schedule", width=10, height=2, command=click_create_schedule_button)
-    createButton.grid(row=3, column=0, padx=5, pady=5)
+    createButton = tk.Button(date_container, text="Create Schedule", width=10, height=2, command=lambda: click_create_schedule_button(start_date_entry, end_date_entry))
+    createButton.grid(row=1, column=2, padx=5, pady=5)
     createButton.config(state=tk.DISABLED)
 
     # center the frame in the window
@@ -211,8 +227,6 @@ def FileSelectionPage(parent):
     
     frame = tk.Frame(parent)
     frame.pack(expand=True)
-
-    # components go here
 
     back_button = tk.Button(frame, text="Return to Main Menu", command=back_to_main_menu)
     back_button.pack()
@@ -237,27 +251,6 @@ def run_file_selection():
     else:
         print("No file path returned by the Python program.")
         return None, None
-
-# create schedule method
-def date_confirmation(start_date_entry, end_date_entry):
-    global mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end
-
-    # Get the selected dates from the DateEntry widgets
-    start_date = start_date_entry.get_date()
-    end_date = end_date_entry.get_date()
-
-    earliest_start = start_date
-    latest_end = end_date
-    
-    # Update the time intervals for each machine
-    mach2_day_times = create_time_intervals(start_date, end_date)
-    mach5_day_times = create_time_intervals(start_date, end_date)
-    mach6_day_times = create_time_intervals(start_date, end_date)
-    mach9_day_times = create_time_intervals(start_date, end_date)
-
-    # Print the selected dates
-    print("Start Date:", start_date)
-    print("End Date:", end_date)
 
 def create_time_intervals(earliest_start, latest_end):
     # Define the list of weekdays
