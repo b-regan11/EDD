@@ -7,6 +7,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font
 from datetime import datetime, timedelta
 import pandas as pd
+import sys
 
 def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table):
     # Creating Excel writer object
@@ -57,166 +58,342 @@ def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_tim
     writer.close()
 
 def modify_workbook(filename):
-    # Load the Excel file
-    wb = load_workbook(filename)
-
-    # Define the colors
-    grey_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
-    dark_blue_fill = PatternFill(start_color="00BFFF", end_color="00BFFF", fill_type="solid")
-    light_blue_fill = PatternFill(start_color="C5D9F1", end_color="C5D9F1", fill_type="solid")
-    dark_green_fill = PatternFill(start_color="9ACD32", end_color="9ACD32", fill_type="solid")
-    light_green_fill = PatternFill(start_color="EBF1DE", end_color="EBF1DE", fill_type="solid")
-    dark_yellow_fill = PatternFill(start_color="FFCC00", end_color="FFCC00", fill_type="solid")
-    light_yellow_fill = PatternFill(start_color="DDD9C4", end_color="DDD9C4", fill_type="solid")
-    dark_red_fill = PatternFill(start_color="FB607F", end_color="FB607F", fill_type="solid")
-    light_red_fill = PatternFill(start_color="F2DCDB", end_color="F2DCDB", fill_type="solid")
-    dark_purple_fill = PatternFill(start_color="DF73FF", end_color="DF73FF", fill_type="solid")
-    light_purple_fill = PatternFill(start_color="E4DFEC", end_color="E4DFEC", fill_type="solid")
-
-    # Iterate over each sheet in the Excel file
-    for sheet_name in wb.sheetnames:
-        # Get the active sheet
-        ws = wb[sheet_name]
-
-        # Set the width of the first column to 18
-        ws.column_dimensions['A'].width = 19
-
-        # Iterate over the rows in the start time column (excluding the header)
-        for row in range(2, ws.max_row + 1):
-            # Get the cell value in the start time column
-            start_time_cell = ws.cell(row=row, column=1)
-            ws.cell(row=row, column=1).font = Font(bold=False)
-
-            timeobj = datetime.strptime(start_time_cell.value, '%H:%M:%S')
-            first_value = timeobj.strftime('%-I:%M %p')
-            second_value = (timeobj + timedelta(minutes=30)).strftime('%-I:%M %p')
-            start_time_cell.value = first_value + " - " + second_value
-
-        # Set the width of the columns starting from the second column (B) to 17
-        for col_num, column in enumerate(ws.iter_cols(min_col=2), start=2):
-            ws.column_dimensions[column[0].column_letter].width = 17
-
-        # Set the width of the last column to 17
-        ws.column_dimensions[ws.cell(row=1, column=ws.max_column).column_letter].width = 17
-
-        # Center the text of every cell in the sheet
-        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
-            for cell in row:
-                cell.alignment = Alignment(horizontal='center', vertical='center')
-
-        # Increase the font size for the first row of data
-        for cell in ws[1]:
-            cell.font = Font(bold=True, size=12)
-
-        # Remove borders from all cells
-        for row in ws.iter_rows():
-            for cell in row:
-                cell.border = Border()
-
-        # Set the value of the first cell (A1) to "Time" and bold the cell
-        ws.cell(row=1, column=1).value = "Time"
-        ws.cell(row=1, column=1).font = Font(bold=True, size=12)
-
-        # format each cell in the first row (excluding the first cell)
-        for col in range(2, ws.max_column + 1):
-            date_cell = ws.cell(row=1, column=col)            
-            dateobj = date_cell.value
-            date_value = dateobj.strftime('%a %-m/%-d/%y')
-            date_cell.value = date_value
-
-        # Change the fill color of cells
-        for row in range(1, ws.max_row + 1):
-            ws.cell(row=row, column=1).fill = grey_fill
+    # determine which operating system is being used
+    if sys.platform == "win32":
+        # Windows-specific code here
+        print("Running on Windows")
         
-        # Change the fill color of cells
-        for col in range(2, ws.max_column + 1):  # Start from the second column
-            # Check if the first row value starts with "Mon"
-            if ws.cell(row=1, column=col).value.startswith("Mon"):
-                # Apply light blue fill color to each cell in the column
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = light_blue_fill
-                ws.cell(row=1, column=col).fill = dark_blue_fill
-            
-            elif ws.cell(row=1, column=col).value.startswith("Tue"):
-                # Apply light green fill color to each cell in the column
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = light_green_fill
-                ws.cell(row=1, column=col).fill = dark_green_fill
-            
-            elif ws.cell(row=1, column=col).value.startswith("Wed"):
-                # Apply light yellow fill color to each cell in the column
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = light_yellow_fill
-                ws.cell(row=1, column=col).fill = dark_yellow_fill
-            
-            elif ws.cell(row=1, column=col).value.startswith("Thu"):
-                # Apply light red fill color to each cell in the column
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = light_red_fill
-                ws.cell(row=1, column=col).fill = dark_red_fill
-            
-            elif ws.cell(row=1, column=col).value.startswith("Fri"):
-                # Apply light purple fill color to each cell in the column
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = light_purple_fill
-                ws.cell(row=1, column=col).fill = dark_purple_fill
-            
-            else:
-                # Apply light purple fill color by default
-                for row in range(1, ws.max_row + 1):
-                    ws.cell(row=row, column=col).fill = grey_fill
+        # Load the Excel file
+        wb = load_workbook(filename)
 
-        # Get the last row
-        last_row = ws.max_row
+        # Define the colors
+        grey_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+        dark_blue_fill = PatternFill(start_color="00BFFF", end_color="00BFFF", fill_type="solid")
+        light_blue_fill = PatternFill(start_color="C5D9F1", end_color="C5D9F1", fill_type="solid")
+        dark_green_fill = PatternFill(start_color="9ACD32", end_color="9ACD32", fill_type="solid")
+        light_green_fill = PatternFill(start_color="EBF1DE", end_color="EBF1DE", fill_type="solid")
+        dark_yellow_fill = PatternFill(start_color="FFCC00", end_color="FFCC00", fill_type="solid")
+        light_yellow_fill = PatternFill(start_color="DDD9C4", end_color="DDD9C4", fill_type="solid")
+        dark_red_fill = PatternFill(start_color="FB607F", end_color="FB607F", fill_type="solid")
+        light_red_fill = PatternFill(start_color="F2DCDB", end_color="F2DCDB", fill_type="solid")
+        dark_purple_fill = PatternFill(start_color="DF73FF", end_color="DF73FF", fill_type="solid")
+        light_purple_fill = PatternFill(start_color="E4DFEC", end_color="E4DFEC", fill_type="solid")
 
-        # Set borders for all filled cells
-        for row_idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
-            for col_idx, cell_value in enumerate(row, start=1):
-                if cell_value is not None:  # Check if the cell is not empty
-                    border = Border(left=Side(style='thin'), 
-                                    right=Side(style='thin'), 
-                                    top=Side(style='thin'), 
-                                    bottom=Side(style='thin'))
-                    # Apply the border to the cell
-                    ws.cell(row=row_idx, column=col_idx).border = border
+        # Iterate over each sheet in the Excel file
+        for sheet_name in wb.sheetnames:
+            # Get the active sheet
+            ws = wb[sheet_name]
+            print(sheet_name)
+            
+            # Set the width of the first column to 18
+            ws.column_dimensions['A'].width = 19
 
-        # Add a row with the first cell copied from the cell above
-        for col in range(1, ws.max_column + 1):
-            ws.cell(row=last_row, column=col).value = ws.cell(row=last_row, column=col).value
+            # Iterate over the rows in the start time column (excluding the header)
+            for row in range(2, ws.max_row + 1):
+                # Get the cell value in the start time column
+                start_time_cell = ws.cell(row=row, column=1)
+                ws.cell(row=row, column=1).font = Font(bold=False)
 
-    # Insert a row at the top of each sheet
-    for sheet_name in wb.sheetnames:
-        ws = wb[sheet_name]
-        ws.insert_rows(1)
-        ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=ws.max_column)
-        ws.cell(row=1, column=1).value = sheet_name
-        ws.cell(row=1, column=1).font = Font(bold=True, size=22)
-        ws.cell(row=1, column=1).fill = grey_fill
-        ws.cell(row=1, column=1).alignment = Alignment(horizontal='center', vertical='center')
-        # Apply the border to all cells within the merged range
-        for row in ws.iter_rows(min_row=1, max_row=1, min_col=1, max_col=ws.max_column):
-            for cell in row:
-                cell.border = Border(left=Side(style='thick'), 
-                                    right=Side(style='thick'), 
-                                    top=Side(style='thick'), 
-                                    bottom=Side(style='thick'))
+                timeobj = datetime.strptime(start_time_cell.value, '%H:%M:%S')
+                first_value = timeobj.strftime('%#I:%M %p')
+                end_time = timeobj + timedelta(minutes=30)
+                second_value = end_time.strftime('%#I:%M %p')
+                start_time_cell.value = first_value + " - " + second_value
+        
+            # Set the width of the columns starting from the second column (B) to 17
+            for col_num, column in enumerate(ws.iter_cols(min_col=2), start=2):
+                ws.column_dimensions[column[0].column_letter].width = 17
+
+            # Set the width of the last column to 17
+            ws.column_dimensions[ws.cell(row=1, column=ws.max_column).column_letter].width = 17
+
+            # Center the text of every cell in the sheet
+            for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+
+            # Increase the font size for the first row of data
+            for cell in ws[1]:
+                cell.font = Font(bold=True, size=12)
+
+            # Remove borders from all cells
+            for row in ws.iter_rows():
+                for cell in row:
+                    cell.border = Border()
+
+            # Set the value of the first cell (A1) to "Time" and bold the cell
+            ws.cell(row=1, column=1).value = "Time"
+            ws.cell(row=1, column=1).font = Font(bold=True, size=12)
+
+            # format each cell in the first row (excluding the first cell)
+            for col in range(2, ws.max_column + 1):
+                date_cell = ws.cell(row=1, column=col)            
+                dateobj = date_cell.value
+                # date_value = dateobj.strftime('%a %-m/%-d/%y')
+                date_value = dateobj.strftime('%a %#m/%#d/%y')
+                date_cell.value = date_value
+
+            # Change the fill color of cells
+            for row in range(1, ws.max_row + 1):
+                ws.cell(row=row, column=1).fill = grey_fill
+            
+            # Change the fill color of cells
+            for col in range(2, ws.max_column + 1):  # Start from the second column
+                # Check if the first row value starts with "Mon"
+                if ws.cell(row=1, column=col).value.startswith("Mon"):
+                    # Apply light blue fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_blue_fill
+                    ws.cell(row=1, column=col).fill = dark_blue_fill
                 
-        DummyUsed = False
+                elif ws.cell(row=1, column=col).value.startswith("Tue"):
+                    # Apply light green fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_green_fill
+                    ws.cell(row=1, column=col).fill = dark_green_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Wed"):
+                    # Apply light yellow fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_yellow_fill
+                    ws.cell(row=1, column=col).fill = dark_yellow_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Thu"):
+                    # Apply light red fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_red_fill
+                    ws.cell(row=1, column=col).fill = dark_red_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Fri"):
+                    # Apply light purple fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_purple_fill
+                    ws.cell(row=1, column=col).fill = dark_purple_fill
+                
+                else:
+                    # Apply light purple fill color by default
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = grey_fill
 
-        # Iterate over the rows and columns in the sheet
-        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
-            for cell in row:
-                # Check if the cell value contains the word "dummy"
-                if cell.value and "dummy" in str(cell.value).lower():
-                    # Replace the cell value with "-----"
-                    cell.value = "-----"
-                    DummyUsed = True
-        if DummyUsed == True:
-            print("No more jobs were selectable from the input file")
-    
-    # Write to Excel
-    # print(f"Excel file saved as {filename}")
-    print(f"Excel file saved at: {os.path.abspath(filename)}")
+            # Get the last row
+            last_row = ws.max_row
 
-    # Save the workbook
-    wb.save(filename)
+            # Set borders for all filled cells
+            for row_idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
+                for col_idx, cell_value in enumerate(row, start=1):
+                    if cell_value is not None:  # Check if the cell is not empty
+                        border = Border(left=Side(style='thin'), 
+                                        right=Side(style='thin'), 
+                                        top=Side(style='thin'), 
+                                        bottom=Side(style='thin'))
+                        # Apply the border to the cell
+                        ws.cell(row=row_idx, column=col_idx).border = border
+
+            # Add a row with the first cell copied from the cell above
+            for col in range(1, ws.max_column + 1):
+                ws.cell(row=last_row, column=col).value = ws.cell(row=last_row, column=col).value
+
+        # Insert a row at the top of each sheet
+        for sheet_name in wb.sheetnames:
+            ws = wb[sheet_name]
+            ws.insert_rows(1)
+            ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=ws.max_column)
+            ws.cell(row=1, column=1).value = sheet_name
+            ws.cell(row=1, column=1).font = Font(bold=True, size=22)
+            ws.cell(row=1, column=1).fill = grey_fill
+            ws.cell(row=1, column=1).alignment = Alignment(horizontal='center', vertical='center')
+            # Apply the border to all cells within the merged range
+            for row in ws.iter_rows(min_row=1, max_row=1, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    cell.border = Border(left=Side(style='thick'), 
+                                        right=Side(style='thick'), 
+                                        top=Side(style='thick'), 
+                                        bottom=Side(style='thick'))
+                    
+            DummyUsed = False
+
+            # Iterate over the rows and columns in the sheet
+            for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    # Check if the cell value contains the word "dummy"
+                    if cell.value and "dummy" in str(cell.value).lower():
+                        # Replace the cell value with "-----"
+                        cell.value = "-----"
+                        DummyUsed = True
+            if DummyUsed == True:
+                print("No more jobs were selectable from the input file")
+        
+        # Write to Excel
+        # print(f"Excel file saved as {filename}")
+        print(f"Excel file saved at: {os.path.abspath(filename)}")
+
+        # Save the workbook
+        wb.save(filename)
+
+    elif sys.platform == "darwin":
+        # macOS-specific code here
+        print("Running on macOS")
+        
+        # Load the Excel file
+        wb = load_workbook(filename)
+
+        # Define the colors
+        grey_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+        dark_blue_fill = PatternFill(start_color="00BFFF", end_color="00BFFF", fill_type="solid")
+        light_blue_fill = PatternFill(start_color="C5D9F1", end_color="C5D9F1", fill_type="solid")
+        dark_green_fill = PatternFill(start_color="9ACD32", end_color="9ACD32", fill_type="solid")
+        light_green_fill = PatternFill(start_color="EBF1DE", end_color="EBF1DE", fill_type="solid")
+        dark_yellow_fill = PatternFill(start_color="FFCC00", end_color="FFCC00", fill_type="solid")
+        light_yellow_fill = PatternFill(start_color="DDD9C4", end_color="DDD9C4", fill_type="solid")
+        dark_red_fill = PatternFill(start_color="FB607F", end_color="FB607F", fill_type="solid")
+        light_red_fill = PatternFill(start_color="F2DCDB", end_color="F2DCDB", fill_type="solid")
+        dark_purple_fill = PatternFill(start_color="DF73FF", end_color="DF73FF", fill_type="solid")
+        light_purple_fill = PatternFill(start_color="E4DFEC", end_color="E4DFEC", fill_type="solid")
+
+        # Iterate over each sheet in the Excel file
+        for sheet_name in wb.sheetnames:
+            # Get the active sheet
+            ws = wb[sheet_name]
+
+            # Set the width of the first column to 18
+            ws.column_dimensions['A'].width = 19
+
+            # Iterate over the rows in the start time column (excluding the header)
+            for row in range(2, ws.max_row + 1):
+                # Get the cell value in the start time column
+                start_time_cell = ws.cell(row=row, column=1)
+                ws.cell(row=row, column=1).font = Font(bold=False)
+
+                timeobj = datetime.strptime(start_time_cell.value, '%H:%M:%S')
+                first_value = timeobj.strftime('%-I:%M %p')
+                second_value = (timeobj + timedelta(minutes=30)).strftime('%-I:%M %p')
+                start_time_cell.value = first_value + " - " + second_value
+
+            # Set the width of the columns starting from the second column (B) to 17
+            for col_num, column in enumerate(ws.iter_cols(min_col=2), start=2):
+                ws.column_dimensions[column[0].column_letter].width = 17
+
+            # Set the width of the last column to 17
+            ws.column_dimensions[ws.cell(row=1, column=ws.max_column).column_letter].width = 17
+
+            # Center the text of every cell in the sheet
+            for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+
+            # Increase the font size for the first row of data
+            for cell in ws[1]:
+                cell.font = Font(bold=True, size=12)
+
+            # Remove borders from all cells
+            for row in ws.iter_rows():
+                for cell in row:
+                    cell.border = Border()
+
+            # Set the value of the first cell (A1) to "Time" and bold the cell
+            ws.cell(row=1, column=1).value = "Time"
+            ws.cell(row=1, column=1).font = Font(bold=True, size=12)
+
+            # format each cell in the first row (excluding the first cell)
+            for col in range(2, ws.max_column + 1):
+                date_cell = ws.cell(row=1, column=col)            
+                dateobj = date_cell.value
+                date_value = dateobj.strftime('%a %-m/%-d/%y')
+                date_cell.value = date_value
+
+            # Change the fill color of cells
+            for row in range(1, ws.max_row + 1):
+                ws.cell(row=row, column=1).fill = grey_fill
+            
+            # Change the fill color of cells
+            for col in range(2, ws.max_column + 1):  # Start from the second column
+                # Check if the first row value starts with "Mon"
+                if ws.cell(row=1, column=col).value.startswith("Mon"):
+                    # Apply light blue fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_blue_fill
+                    ws.cell(row=1, column=col).fill = dark_blue_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Tue"):
+                    # Apply light green fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_green_fill
+                    ws.cell(row=1, column=col).fill = dark_green_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Wed"):
+                    # Apply light yellow fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_yellow_fill
+                    ws.cell(row=1, column=col).fill = dark_yellow_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Thu"):
+                    # Apply light red fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_red_fill
+                    ws.cell(row=1, column=col).fill = dark_red_fill
+                
+                elif ws.cell(row=1, column=col).value.startswith("Fri"):
+                    # Apply light purple fill color to each cell in the column
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = light_purple_fill
+                    ws.cell(row=1, column=col).fill = dark_purple_fill
+                
+                else:
+                    # Apply light purple fill color by default
+                    for row in range(1, ws.max_row + 1):
+                        ws.cell(row=row, column=col).fill = grey_fill
+
+            # Get the last row
+            last_row = ws.max_row
+
+            # Set borders for all filled cells
+            for row_idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
+                for col_idx, cell_value in enumerate(row, start=1):
+                    if cell_value is not None:  # Check if the cell is not empty
+                        border = Border(left=Side(style='thin'), 
+                                        right=Side(style='thin'), 
+                                        top=Side(style='thin'), 
+                                        bottom=Side(style='thin'))
+                        # Apply the border to the cell
+                        ws.cell(row=row_idx, column=col_idx).border = border
+
+            # Add a row with the first cell copied from the cell above
+            for col in range(1, ws.max_column + 1):
+                ws.cell(row=last_row, column=col).value = ws.cell(row=last_row, column=col).value
+
+        # Insert a row at the top of each sheet
+        for sheet_name in wb.sheetnames:
+            ws = wb[sheet_name]
+            ws.insert_rows(1)
+            ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=ws.max_column)
+            ws.cell(row=1, column=1).value = sheet_name
+            ws.cell(row=1, column=1).font = Font(bold=True, size=22)
+            ws.cell(row=1, column=1).fill = grey_fill
+            ws.cell(row=1, column=1).alignment = Alignment(horizontal='center', vertical='center')
+            # Apply the border to all cells within the merged range
+            for row in ws.iter_rows(min_row=1, max_row=1, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    cell.border = Border(left=Side(style='thick'), 
+                                        right=Side(style='thick'), 
+                                        top=Side(style='thick'), 
+                                        bottom=Side(style='thick'))
+                    
+            DummyUsed = False
+
+            # Iterate over the rows and columns in the sheet
+            for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    # Check if the cell value contains the word "dummy"
+                    if cell.value and "dummy" in str(cell.value).lower():
+                        # Replace the cell value with "-----"
+                        cell.value = "-----"
+                        DummyUsed = True
+            if DummyUsed == True:
+                print("No more jobs were selectable from the input file")
+        
+        # Write to Excel
+        # print(f"Excel file saved as {filename}")
+        print(f"Excel file saved at: {os.path.abspath(filename)}")
+
+        # Save the workbook
+        wb.save(filename)
