@@ -525,14 +525,6 @@ class SimilaritySwap:
 
         latest_end_date = latest_end_date + timedelta(days=2)
         for m in range(1, 5):
-            # if m == 1:
-            #     print("MACHINE 2")
-            # elif m == 2:
-            #     print("MACHINE 5")
-            # elif m == 3:
-            #     print("MACHINE 6")
-            # elif m == 4:
-            #     print("MACHINE 9")
             jobs_orig = machines_orig.get_assigned_jobs(m)
             jobs_alt = machines_alt.get_assigned_jobs(m)
             overdue_count = 0
@@ -632,6 +624,11 @@ class SimilaritySwap:
                 new_slot_availability = curr_slot.get_availability()
                 new_slot_assignment = curr_slot.get_assignment()
 
+                # Check if the start time is between 12 am and 5:30 am, moves day for output formatting purposes
+                if 0 <= new_slot_start.hour < 6:
+                    # Decrease the day value by 1
+                    new_slot_start -= timedelta(days=1)
+
                 new_slot.set_start(new_slot_start)
                 new_slot.set_end(new_slot_end)
                 new_slot.set_availability(new_slot_availability)
@@ -645,6 +642,6 @@ class SimilaritySwap:
                     machines_os.mach6_slot[s] = new_slot
                 elif m == 4:
                     machines_os.mach9_slot[s] = new_slot
-                
+
         return machines_os
     # need to change the 25 hr thing

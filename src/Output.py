@@ -204,6 +204,14 @@ def modify_workbook(filename):
                                     right=Side(style='thick'), 
                                     top=Side(style='thick'), 
                                     bottom=Side(style='thick'))
+                
+        # Iterate over the rows and columns in the sheet
+        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+            for cell in row:
+                # Check if the cell value contains the word "dummy"
+                if cell.value and "dummy" in str(cell.value).lower():
+                    # Replace the cell value with "-----"
+                    cell.value = "-----"
 
     # Save the workbook
     wb.save(filename)
