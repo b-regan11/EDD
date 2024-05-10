@@ -12,6 +12,7 @@ import tkinter.messagebox as messagebox
 from tkcalendar import DateEntry
 from PIL import ImageTk, Image
 import Output
+import sys
 
 sorted_data = None
 mach2_day_time = []
@@ -201,11 +202,14 @@ def MainMenu():
     file_name_label.grid(row=1, column=0, padx=5, pady=0)
 
     # create the file selection button
-    fileSelectionButton = tk.Button(date_container, text="File Selection", width=10, height=2, command=click_file_selection_button)
+    fileSelectionButton = tk.Button(date_container, text="File Selection", width=15, height=2, command=click_file_selection_button)
     fileSelectionButton.grid(row=0, column=2, padx=5, pady=5)
 
     # create the create schedule button
-    createButton = tk.Button(date_container, text="Create Schedule", width=10, height=2, command=lambda: click_create_schedule_button(start_date_entry, end_date_entry))
+    if sys.platform == "win32":
+        createButton = tk.Button(date_container, text="Create Schedule", width=15, height=2, command=lambda: click_create_schedule_button(start_date_entry, end_date_entry))
+    elif sys.platform == "darwin":
+        createButton = tk.Button(date_container, text="Create Schedule", width=10, height=2, command=lambda: click_create_schedule_button(start_date_entry, end_date_entry))
     createButton.grid(row=1, column=2, padx=5, pady=5)
     createButton.config(state=tk.DISABLED)
 
