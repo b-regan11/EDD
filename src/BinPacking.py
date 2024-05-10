@@ -30,11 +30,10 @@ class BinPacking:
         
         machine_start_times = []
 
-        for UL in range(5):
+        for UL in range(6):
             UL_JobCount = urgency_list.get_job_count(UL)
             # print("Urgency List -> ", UL)
             for j in range(UL_JobCount):
-                # print("Job Before-> ", j, " | List -> ", UL)
                 # calculate slots based on prod hrs for job j
                 job_slots = machines.calculate_slot_count(datetime.now(), datetime.now() + timedelta(hours=urgency_list.get_job_prod_hours(UL, j)))
                 # print("Job -> ", urgency_list.get_job_num(UL, j), " | Job Slots -> ", job_slots)
@@ -222,7 +221,10 @@ class BinPacking:
                     changeover.set_start(changeover_start)
                     changeover.set_end(changeover_end)
                     changeover.set_jobB_num(urgency_list.get_job(UL, j))
+                    # print("job # NEAR CHANGEOVER-> ", j)
                     changeover.set_Job(urgency_list.get_job(UL, j))
+                    # print("Dummy Job Num => ", urgency_list.get_job_num(UL, j))
+                    # print("Dummy Job Type => ", type(urgency_list.get_job(UL, j)))
                     changeover.set_Job_Num()
                     # print("Changeover Start: ", changeover.Start)
                     # print("Changeover End: ", changeover.End) 
@@ -309,6 +311,7 @@ class BinPacking:
                                 mach6_curr_slot += 1
                             elif MB == 4:
                                 mach9_curr_slot += 1
+
                         urgency_list.set_job_start(UL, j, changeover_start)
                         urgency_list.set_job_end(UL, j, changeover_end)
                         urgency_list.set_job_machine_assignment(UL, j, current_machine)
@@ -589,6 +592,7 @@ class BinPacking:
                                 machine_start_times.append(('MB', mach9curr_start))
                 
                 # find earliest start time of all machines
+                # print("Here are the machines left after this changeover: ", len(machine_start_times))
                 machine_start_times.sort(key=lambda tup: tup[1])
                 if len(machine_start_times) == 0:
                     continue
@@ -694,8 +698,6 @@ class BinPacking:
                                 urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach6_curr_slot))
                             elif MB == 4:
                                 urgency_list.set_job_end(UL, j, machines.get_end_time(current_machine, mach9_curr_slot))
-                        # print("Job -> ", urgency_list.get_job_num(UL, j), " | Start -> ", urgency_list.get_job_start(UL, j), " | End -> ", urgency_list.get_job_end(UL, j))
-
 
                         if first_mach == "MA1":
                             if MA1 == 1:

@@ -178,12 +178,7 @@ class SimilaritySwap:
 
         return FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs
         
-    def job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, iteration):
-        if isinstance(iteration, int):
-            print("This will be solution-", iteration)
-        else:
-            print("Iteration value needs to be an integer")
-            exit(0)
+    def job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs):
         
         for m in range(1, 5):
             if m == 1:

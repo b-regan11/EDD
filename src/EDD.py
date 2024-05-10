@@ -68,7 +68,7 @@ def MainMenu():
                     jobObj = machines_orig.jobs_assigned[m]
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines_orig.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_orig.get_assigned_job_end(m, jobObj[j]))
             FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs = SimilaritySwap.create(machines_orig)
-            Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs, 1)
+            Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order = SimilaritySwap.job_reorder(FromTo_Mach2Jobs, FromTo_Mach5Jobs, FromTo_Mach6Jobs, FromTo_Mach9Jobs)
             machines_alt = SimilaritySwap.time_assignment(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, Mach2_New_Order, Mach5_New_Order, Mach6_New_Order, Mach9_New_Order)
             print("---------- SOLUTION-1 --------------")
             for m in range (1, 5):

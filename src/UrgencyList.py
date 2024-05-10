@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 from Job import Job
+import pandas as pd
+import numpy as np
 
 class UrgencyList:
     def __init__(self):
@@ -9,6 +11,7 @@ class UrgencyList:
         self.UL_Unattainable = {}
         self.UL_Overdue_Unattainable = {}
         self.UL_Other = {}
+        self.UL_Dummy = {} # only will be accessed if the entire input file has been ran through
 
     def create(self, start_date, end_date, sorted_data):
         # Convert start_date and end_date to datetime objects
@@ -24,16 +27,16 @@ class UrgencyList:
         overdue_unattainable = UrgencyList_Data.query('production_hrs > 25')  # 4
         other_list = sorted_data[(sorted_data['due_date'] > end_date + timedelta(days=2)) & (sorted_data['due_date'] < '2099-1-01')]  # 5
 
-        # Calculate the remainder number of jobs to fill in the other list to total 40 jobs
-        Remainder = 40 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
-        other_list = other_list.iloc[:Remainder]  # Return extra rows to make sure there isn't more than 40 rows of data
-        # print(attainable)
-        # print(overdue_attainable)
-        # print(unattainable)
-        # print(overdue_unattainable)
-        # print(other_list)
+        # Calculate the remainder number of jobs to fill in the other list to total 100 jobs
+        # Remainder = 100 - (len(attainable) + len(overdue_attainable) + len(unattainable) + len(overdue_unattainable))
+        # other_list = other_list.iloc[:Remainder]  # Return extra rows to make sure there isn't more than 40 rows of data
+        print(attainable)
+        print(overdue_attainable)
+        print(unattainable)
+        print(overdue_unattainable)
+        print(other_list)
         
-        for UL in range(5):
+        for UL in range(6):
             if UL == 0: # Attainable
                 row_count = len(attainable)
                 for r in range(row_count):
@@ -154,6 +157,51 @@ class UrgencyList:
                     job.set_Start(None)
                     job.set_End(None) 
                     self.UL_Other[r] = job
+            elif UL == 5: # Dummy List
+                mach_count = 4
+                frame_count = 8
+                iteration = -1
+                # row_count = mach_count*frame_count
+                for m in range(mach_count):
+                    for f in range(frame_count):
+                        job = Job()
+                        if f == 0:
+                            frame = "Small-T"
+                        elif f == 1:
+                            frame = "Rectangle"
+                        elif f == 2:    
+                            frame = "Round"
+                        elif f == 3:
+                            frame = "Large-T"
+                        elif f == 4:
+                            frame = "Short Large-T"
+                        elif f == 5:
+                            frame = "Small Self-Contained"
+                        elif f == 6:
+                            frame = "Self Contained"
+                        elif f == 7:
+                            frame = "XL-T"
+                        job.set_Job_Num("Dummy")
+                        job.set_Qty(np.float64(10000))
+                        job.set_ProductionHours(np.float64(1000))
+                        job.set_Deadline(pd.Timestamp(year=2098, month=12, day=30))
+                        job.set_Status("Received")
+                        job.set_PO_Num("111111")
+                        job.set_SO_Num("1111")
+                        job.set_PO_Price(np.float64(1111))
+                        job.set_Frame(frame)
+                        job.set_Lbs(np.float64(20))
+                        job.set_Material_ID("TPE 201-55 NoMaterial")
+                        job.set_Cost_Per_Pound(np.float64(0.00))
+                        job.set_Colorant_ID("6060 B NoColorant")
+                        
+                        job.set_Overall_Color(None)
+                        job.set_Job_Availability(False)
+                        job.set_Machine_Assignment(None)
+                        job.set_Start(None)
+                        job.set_End(None)
+                        iteration += 1
+                        self.UL_Dummy[iteration] = job
     
     # Getter methods 
     def get_job(self, list_index, job_index):
@@ -167,6 +215,8 @@ class UrgencyList:
             return self.UL_Overdue_Unattainable.get(job_index)
         elif list_index == 4:
             return self.UL_Other.get(job_index)
+        elif list_index == 5:
+            return self.UL_Dummy.get(job_index)
         return None  # Return None if the job is not found
     
     def get_job_num(self, list_num, job_index):
@@ -185,6 +235,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Job_Num()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Job_Num()
         return None # Return None if the job is not found
     
     def get_job_qty(self, list_num, job_index):
@@ -203,6 +256,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Qty()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Qty()
         return None # Return None if the job is not found
     
     def get_job_prod_hours(self, list_num, job_index):
@@ -221,6 +277,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_ProductionHours()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_ProductionHours()
         return None # Return None if the job is not found
     
     def get_job_deadline(self, list_num, job_index):
@@ -239,6 +298,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Deadline()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Deadline()
         return None # Return None if the job is not found
     
     def get_job_status(self, list_num, job_index):
@@ -257,6 +319,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Status()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Status()
         return None # Return None if the job is not found
     
     def get_job_po_num(self, list_num, job_index):
@@ -275,6 +340,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_PO_Num()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_PO_Num()
         return None # Return None if the job is not found
     
     def get_job_so_num(self, list_num, job_index):
@@ -293,6 +361,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_SO_Num()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_SO_Num()
         return None # Return None if the job is not found
     
     def get_job_po_price(self, list_num, job_index):
@@ -311,6 +382,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_PO_Price()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_PO_Price()
         return None # Return None if the job is not found
     
     def get_job_frame(self, list_num, job_index):
@@ -329,6 +403,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Frame()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Frame()
         return None # Return None if the job is not found
     
     def get_job_lbs(self, list_num, job_index):
@@ -347,6 +424,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Lbs()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Lbs()
         return None # Return None if the job is not found
     
     def get_job_material_id(self, list_num, job_index):
@@ -365,6 +445,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Material_ID()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Material_ID()
         return None # Return None if the job is not found
     
     def get_job_material_name(self, list_num, job_index):
@@ -383,6 +466,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Material_Name()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Material_Name()
         return None # Return None if the job is not found
     
     def get_job_cost_per_pound(self, list_num, job_index):
@@ -401,6 +487,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Cost_Per_Pound()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Cost_Per_Pound()
         return None # Return None if the job is not found
     
     def get_job_colorant_id(self, list_num, job_index):
@@ -419,6 +508,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Colorant_ID()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Colorant_ID()
         return None # Return None if the job is not found
     
     def get_job_colorant_name(self, list_num, job_index):
@@ -437,6 +529,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Colorant_Name()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Colorant_Name()
         return None # Return None if the job is not found
 
     def get_job_overall_color(self, list_num, job_index):
@@ -455,6 +550,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Overall_Color()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Overall_Color()
         return None # Return None if the job is not found
 
     def get_job_availability(self, list_num, job_index):
@@ -473,6 +571,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Job_Availability()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Job_Availability()
         return None # Return None if the job is not found
     
     def get_job_machine_assignment(self, list_num, job_index):
@@ -491,6 +592,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Machine_Assignment()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Machine_Assignment()
         return None # Return None if the job is not found
     
     def get_job_start(self, list_num, job_index):
@@ -509,6 +613,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_Start()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_Start()
         return None # Return None if the job is not found
     
     def get_job_end(self, list_num, job_index):
@@ -527,6 +634,9 @@ class UrgencyList:
         if list_num ==4:
             if job_index in self.UL_Other:
                 return self.UL_Other[job_index].get_End()
+        if list_num ==5:
+            if job_index in self.UL_Dummy:
+                return self.UL_Dummy[job_index].get_End()
         return None # Return None if the job is not found
     
     # Setter methods
@@ -546,6 +656,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Start(start_time)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_Start(start_time)
 
     def set_job_end(self, list_num, job_index, end_time):
         if list_num == 0:
@@ -563,6 +676,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_End(end_time)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_End(end_time)
 
     def set_job_machine_assignment(self, list_num, job_index, machine_assignment):
         if list_num == 0:
@@ -580,6 +696,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Machine_Assignment(machine_assignment)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_Machine_Assignment(machine_assignment)
 
     def set_job_availability(self, list_num, job_index, availability):
         if list_num == 0:
@@ -597,6 +716,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Job_Availability(availability)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_Job_Availability(availability)
 
     def set_job_overall_color(self, list_num, job_index, overall_color):
         if list_num == 0:
@@ -614,6 +736,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Overall_Color(overall_color)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_Overall_Color(overall_color)
     
     def set_job_finished(self, list_num, job_index, finished):
         if list_num == 0:
@@ -631,6 +756,9 @@ class UrgencyList:
         elif list_num == 4:
             if job_index in self.UL_Other:
                 self.UL_Other[job_index].set_Finished(finished)
+        elif list_num == 5:
+            if job_index in self.UL_Dummy:
+                self.UL_Dummy[job_index].set_Finished(finished)
     
     # getter methd for total job count in an urgency list
     def get_job_count(self, list_num):
@@ -664,6 +792,12 @@ class UrgencyList:
                 return 0
             else:
                 return max(self.UL_Other.keys()) + 1
+        elif list_num == 5:
+            if len(self.UL_Dummy) == 0:
+                print("list ", list_num, " is empty")
+                return 0
+            else:
+                return max(self.UL_Dummy.keys()) + 1
         return None
     
 
