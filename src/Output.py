@@ -57,7 +57,7 @@ def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_tim
     # Close the Excel writer object to save the workbook
     writer.close()
 
-def modify_workbook(filename):
+def modify_workbook(filename, materials_table):
     # determine which operating system is being used
     if sys.platform == "win32":
         # Windows-specific code here
@@ -390,9 +390,42 @@ def modify_workbook(filename):
                         DummyUsed = True
             if DummyUsed == True:
                 print("No more jobs were selectable from the input file")
+
+        # Create a new sheet for the materials table
+        ws_materials = wb.create_sheet(title='Materials')
+
+        # Convert the materials table DataFrame to an Excel sheet
+        for row in pd.DataFrame(materials_table).iterrows():
+            ws_materials.append(row[1].tolist())
+        ws_materials.insert_rows(1)
+        ws_materials.cell(row=1, column=1).value = "Job_Num"
+        ws_materials.cell(row=1, column=1).font = Font(bold=True)
+        ws_materials.cell(row=1, column=2).value = "Lbs"
+        ws_materials.cell(row=1, column=2).font = Font(bold=True)
+        ws_materials.cell(row=1, column=3).value = "Material"
+        ws_materials.cell(row=1, column=3).font = Font(bold=True)
+        ws_materials.cell(row=1, column=4).value = "Cost per Pound"
+        ws_materials.cell(row=1, column=4).font = Font(bold=True)
+        ws_materials.cell(row=1, column=5).value = "Job Cost"
+        ws_materials.cell(row=1, column=5).font = Font(bold=True)
         
+        ws_materials.delete_cols(4)
+        ws_materials.delete_cols(2)
+
+        # Iterate through each column and set the width based on the maximum content length
+        for column in ws_materials.columns:
+            max_length = 0
+            column_letter = column[0].column_letter  # Get the column letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2  # Adjust the width (you can change the multiplier for better fit)
+            ws_materials.column_dimensions[column_letter].width = adjusted_width
+
         # Write to Excel
-        # print(f"Excel file saved as {filename}")
         print(f"Excel file saved at: {os.path.abspath(filename)}")
 
         # Save the workbook

@@ -297,6 +297,42 @@ class Machines:
 
         return timeslot_table
     
+    def generate_materials_list(self):
+        # Initialize lists to store job info for all machines
+        job_nums = []
+        lbs = []
+        materials = []
+        costs_per_pound = []
+        total_cost = []
+        for machine_number in range(1, 5):
+            machine_jobs = self.get_assigned_jobs(machine_number)
+            
+            for j in range(len(machine_jobs)):
+                job = machine_jobs[j]
+                if job.get_Job_Num() != "Dummy" and job.get_Job_Num().find(" (Changeover)") == -1:
+                    job_nums.append(job.get_Job_Num())
+                    lbs.append(job.get_Lbs())
+                    materials.append(job.get_Material_ID())
+                    costs_per_pound.append(job.get_Cost_Per_Pound())
+                    if job.get_Lbs() is None or job.get_Cost_Per_Pound() is None:
+                        tc = 0
+                    else:
+                        tc = job.get_Lbs() * job.get_Cost_Per_Pound()
+                    total_cost.append(tc)
+            
+        # Create DataFrame from lists
+        materials_table = pd.DataFrame({
+            'Job Number': job_nums,
+            'Lbs': lbs,
+            'Materials': materials,
+            'Costs_Per_Pound': costs_per_pound,
+            'Total_Cost': total_cost
+        })
+        return materials_table
+
+            
+
+    
     # Method to get all timeslot objects for a given machine number
     def get_timeslots_for_machine(self, machine_number):
         if machine_number not in [1, 2, 3, 4]:

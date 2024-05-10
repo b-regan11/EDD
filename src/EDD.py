@@ -137,7 +137,8 @@ def MainMenu():
                 for j in range(len(machine_jobs)):
                     jobObj = machines_os.jobs_assigned[m]
                     print("Job: ", machine_jobs[j], " | StartTime -> ", machines_os.get_assigned_job_start(m, jobObj[j]), " | EndTime -> ", machines_os.get_assigned_job_end(m, jobObj[j]))
-            
+            materials_table = machines_os.generate_materials_list()
+
             # Format the datetime object as per your requirement
             fileroot = "MachineSchedule_"
             formatted_date = earliest_start.strftime("%Y_%B_%d")
@@ -145,7 +146,7 @@ def MainMenu():
             # filename = "sample_table.xlsx"
             filename = fileroot + formatted_date + ".xlsx"
             Output.create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table)
-            Output.modify_workbook(filename)
+            Output.modify_workbook(filename, materials_table)
 
         else:
             print("No sorted data returned. Exiting.")
@@ -202,7 +203,10 @@ def MainMenu():
     file_name_label.grid(row=1, column=0, padx=5, pady=0)
 
     # create the file selection button
-    fileSelectionButton = tk.Button(date_container, text="File Selection", width=15, height=2, command=click_file_selection_button)
+    if sys.platform == "win32":
+        fileSelectionButton = tk.Button(date_container, text="File Selection", width=15, height=2, command=click_file_selection_button)
+    elif sys.platform == "darwin":
+        fileSelectionButton = tk.Button(date_container, text="File Selection", width=10, height=2, command=click_file_selection_button)
     fileSelectionButton.grid(row=0, column=2, padx=5, pady=5)
 
     # create the create schedule button

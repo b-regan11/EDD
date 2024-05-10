@@ -1,5 +1,6 @@
 # output files
 MachineSchedule_*
+~$*
 # Java
 # Compiled class file
 *.class
