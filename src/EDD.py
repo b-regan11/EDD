@@ -9,6 +9,7 @@ from Machines import Machines
 from SimilaritySwap import SimilaritySwap
 import tkinter as tk
 import tkinter.messagebox as messagebox
+from tkinter import filedialog
 from tkcalendar import DateEntry
 from PIL import ImageTk, Image
 import Output
@@ -72,6 +73,7 @@ def MainMenu():
         print("End Date:", end_date)
         
         global sorted_data
+        global output_save_path
         print("Running BinPacking Method")
         if sorted_data is not None:
             machines_orig = BinPacking.main(mach2_day_times, mach5_day_times, mach6_day_times, mach9_day_times, earliest_start, latest_end, sorted_data)
@@ -145,8 +147,14 @@ def MainMenu():
 
             # filename = "sample_table.xlsx"
             filename = fileroot + formatted_date + ".xlsx"
-            Output.create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table)
-            Output.modify_workbook(filename, materials_table)
+            try:
+                output_save_path = choose_save_directory()
+                Output.create_table(output_save_path, filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table)
+                Output.modify_workbook(output_save_path, filename, materials_table)
+            except Exception as e:
+                # show_message_box("Error", str(e))
+                show_message_box("Error", "Please select another file.\nExcel files (.xlsx) only.\nFile must be in correct format.")
+                print("Please select a directory to save output file")
 
         else:
             print("No sorted data returned. Exiting.")
@@ -289,7 +297,15 @@ def create_time_intervals(earliest_start, latest_end):
         current_date += timedelta(days=1)
     
     return time_intervals
-    
+
+def choose_save_directory():
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+
+    # Ask the user to select a directory
+    output_save_path = filedialog.askdirectory()
+
+    return output_save_path
     
     
 # Main method

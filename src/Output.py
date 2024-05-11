@@ -9,9 +9,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import sys
 
-def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table):
+def create_table(filepath, filename, mach2_timeslot_table, mach5_timeslot_table, mach6_timeslot_table, mach9_timeslot_table):
+    # Combine filepath and filename
+    full_filename = os.path.join(filepath, filename)
+    
     # Creating Excel writer object
-    writer = pd.ExcelWriter(filename, engine='xlsxwriter')
+    writer = pd.ExcelWriter(full_filename, engine='xlsxwriter')
 
     # Loop through the machines
     for m in range(1, 5):
@@ -57,10 +60,10 @@ def create_table(filename, mach2_timeslot_table, mach5_timeslot_table, mach6_tim
     # Close the Excel writer object to save the workbook
     writer.close()
 
-def modify_workbook(filename, materials_table):
-        
+def modify_workbook(filepath, filename, materials_table):
     # Load the Excel file
-    wb = load_workbook(filename)
+    full_filepath = os.path.join(filepath, filename)
+    wb = load_workbook(full_filepath)
 
     # Define the colors
     grey_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
@@ -267,4 +270,4 @@ def modify_workbook(filename, materials_table):
     print(f"Excel file saved at: {os.path.abspath(filename)}")
 
     # Save the workbook
-    wb.save(filename)
+    wb.save(full_filepath)
