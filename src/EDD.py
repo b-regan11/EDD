@@ -1,4 +1,4 @@
-import os
+import babel.numbers
 
 from datetime import datetime, timedelta
 import os
@@ -169,8 +169,10 @@ def MainMenu():
 
     # disable window resizing
     root.resizable(False, False)
-
-    image = Image.open("Resources/WepcoLogo.png")
+    
+    directory_path = os.path.dirname(__file__)
+    filepath = os.path.join(directory_path, "Resources/WepcoLogo.png")
+    image = Image.open(filepath)
     photo = ImageTk.PhotoImage(image)
 
     # set window dimensions
